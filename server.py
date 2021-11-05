@@ -82,8 +82,8 @@ def login():
 			return redirect(url_for("login"))
 
 # route to make a new game
-@app.route("/addGame", methods=["GET", "POST"])
-def login():
+@app.route("/addGame/", methods=["GET", "POST"])
+def addGame():
 	loginForm = LoginForm()
 	if request.method == 'GET':
 		return render_template("gameForm.j2")
