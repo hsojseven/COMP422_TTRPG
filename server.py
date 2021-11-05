@@ -31,6 +31,7 @@ class Character(db.Model):
     __tablename__ = 'Characters'
     id=db.Column(db.Integer, primary_key=True, autoincrement=True)
     userID=db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False) # FK
+    name = db.Column(db.Unicode, nullable=False)
     strength = db.Column(db.Integer, nullable=False)
     dexterity = db.Column(db.Integer, nullable=False)
     constitution = db.Column(db.Integer, nullable=False)
@@ -42,11 +43,28 @@ class Character(db.Model):
 # WILL WIPE ALL DB DATA
 db.drop_all()
 db.create_all()
+
+user1 = User(id=1, username="bobBuilder", password=1234)
+user2 = User(id=2, username="laryLobster", password=1234)
+user3 = User(id=3, username="davidV", password=1234)
+
+char1 = Character(id=1, userID=user1.id, name="Grug", strength=24, dexterity=14, constitution=20, intelligence=0, wisdom=10, charisma=0)
+char2 = Character(id=2, userID=user1.id, name="Valfore", strength=10, dexterity=16, constitution=16, intelligence=14, wisdom=13, charisma=24)
+char3 = Character(id=3, userID=user2.id, name="Bobby", strength=10, dexterity=23, constitution=16, intelligence=16, wisdom=16, charisma=10)
+char4 = Character(id=4, userID=user2.id, name="Zerashale", strength=20, dexterity=12, constitution=16, intelligence=16, wisdom=12, charisma=20)
+char5 = Character(id=5, userID=user3.id, name="Cul'gal", strength=12, dexterity=13, constitution=12, intelligence=25, wisdom=18, charisma=16)
+
+game1 = Game(id=1, name="Raiders", description="This game will be played MWF at 8pm.")
+game2 = Game(id=2, name="Mists over Camelot", description="Game containing players that play a game sometimes.")
+game3 = Game(id=3, name="Vault of Kal'thari", description="Venture into the vault where many never return. Become rich, or die trying.")
+
+db.session.add_all((user1, user2, user3, char1, char2, char3, char4, char5, game1, game2, game3))
+db.session.commit()
 ##########################
 
 @app.route("/home/")
 def home():
-    return render_template("home.html")
+    return render_template("home.j2", gameList=db.session.query(Game).all())
 
 # for now just put a string in the login page and you will login
 @app.route("/", methods=["GET", "POST"])
@@ -62,3 +80,18 @@ def login():
 			for field,error in loginForm.errors.items():
 				flash(f"{field}: {error}")
 			return redirect(url_for("login"))
+
+# route to make a new game
+@app.route("/addGame", methods=["GET", "POST"])
+def login():
+	loginForm = LoginForm()
+	if request.method == 'GET':
+		return render_template("gameForm.j2")
+
+	if request.method == "POST":
+		if loginForm.validate():
+			return redirect(url_for("home"))
+		else:
+			for field,error in loginForm.errors.items():
+				flash(f"{field}: {error}")
+			return redirect(url_for("addGame"))
