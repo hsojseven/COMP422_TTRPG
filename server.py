@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g, abort, jsonify
-from myforms import LoginForm
+from myforms import GameForm, LoginForm
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -62,10 +62,6 @@ db.session.add_all((user1, user2, user3, char1, char2, char3, char4, char5, game
 db.session.commit()
 ##########################
 
-@app.route("/home/")
-def home():
-    return render_template("home.j2", gameList=db.session.query(Game).all())
-
 # for now just put a string in the login page and you will login
 @app.route("/", methods=["GET", "POST"])
 def login():
@@ -81,17 +77,28 @@ def login():
 				flash(f"{field}: {error}")
 			return redirect(url_for("login"))
 
+@app.route("/home/")
+def home():
+    return render_template("home.j2", gameList=db.session.query(Game).all())
+
 # route to make a new game
 @app.route("/addGame/", methods=["GET", "POST"])
 def addGame():
-	loginForm = LoginForm()
+	newGameForm = GameForm()
 	if request.method == 'GET':
-		return render_template("gameForm.j2")
+		return render_template("gameForm.j2", form=newGameForm)
 
 	if request.method == "POST":
-		if loginForm.validate():
+		if newGameForm.validate():
+			game = Game(name=newGameForm.name.data, description=newGameForm.description.data)
+			db.session.add(game)
+			db.session.commit()
 			return redirect(url_for("home"))
 		else:
-			for field,error in loginForm.errors.items():
+			for field,error in newGameForm.errors.items():
 				flash(f"{field}: {error}")
 			return redirect(url_for("addGame"))
+
+@app.route("/game/", methods=["GET", "POST"])
+def game():
+	return "<h2> This will be a game </h2>"
