@@ -31,8 +31,13 @@
       {# CSRF Protection #}
       {{ form.hidden_tag() }}
       {{ form.username.label }} {{ form.username() }}
+      <br><br>
+      {{form.password.label}} {{form.password()}}
+      <br><br> 
       {{ form.submit() }}
     </form>
+
+    <br><br>To register click <a href="{{url_for('get_register')}}">here</a>. <br>
   </main>
 </body>
 </html>

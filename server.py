@@ -1,7 +1,10 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session, flash, g, abort, jsonify
-from myforms import GameForm, LoginForm
+from flask import Flask, render_template, request, redirect, url_for, session, flash, g, jsonify
+from myforms import GameForm, LoginForm, RegisterForm
+from flask_login import UserMixin, LoginManager, login_required
+from flask_login import login_user, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
+from hashing import UpdatedHasher
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(32)
@@ -14,19 +17,52 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{dbfile}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-class User(db.Model):
+# Prepare and connect the LoginManager to this app
+app.login_manager = LoginManager()
+app.login_manager.login_view = 'get_login'
+@app.login_manager.user_loader
+def load_user(uid):
+    return User.query.get(int(uid))
+
+# open and read the contents of the pepper file into your pepper key
+pepfile = os.path.join(scriptdir, "pepper.bin")
+with open(pepfile, 'rb') as fin:
+  pepper_key = fin.read()
+  
+# create a new instance of UpdatedHasher using that pepper key
+pwd_hasher = UpdatedHasher(pepper_key)
+#-----------------------------------------------------------------------------------------
+#------------------------------------- USER TABLE ----------------------------------------
+#-----------------------------------------------------------------------------------------
+class User(UserMixin, db.Model):
     __tablename__ = 'Users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.Unicode, nullable=False)
-    password = db.Column(db.Unicode, nullable=False)
+    password_hash = db.Column(db.LargeBinary) # hash is a binary attribute
     characters = db.relationship('Character', backref='Characters')
-
+    
+     # make a write-only password property that just updates the stored hash
+    @property
+    def password(self):
+        raise AttributeError("password is a write-only attribute")
+    @password.setter
+    def password(self, pwd):
+        self.password_hash = pwd_hasher.hash(pwd)
+    
+    # add a verify_password convenience method
+    def verify_password(self, pwd):
+        return pwd_hasher.check(pwd, self.password_hash)
+#-----------------------------------------------------------------------------------------
+#------------------------------------- GAME TABLE ----------------------------------------
+#-----------------------------------------------------------------------------------------
 class Game(db.Model):
     __tablename__ = 'Games'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.Unicode, nullable=False)
     description = db.Column(db.Unicode, nullable=False)
-
+#-----------------------------------------------------------------------------------------
+#----------------------------------- CHARACTER TABLE -------------------------------------
+#-----------------------------------------------------------------------------------------
 class Character(db.Model):
     __tablename__ = 'Characters'
     id=db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -44,9 +80,9 @@ class Character(db.Model):
 db.drop_all()
 db.create_all()
 
-user1 = User(id=1, username="bobBuilder", password=1234)
-user2 = User(id=2, username="laryLobster", password=1234)
-user3 = User(id=3, username="davidV", password=1234)
+user1 = User(id=1, username="bobBuilder")
+user2 = User(id=2, username="laryLobster")
+user3 = User(id=3, username="davidV")
 
 char1 = Character(id=1, userID=user1.id, name="Grug", strength=24, dexterity=14, constitution=20, intelligence=0, wisdom=10, charisma=0)
 char2 = Character(id=2, userID=user1.id, name="Valfore", strength=10, dexterity=16, constitution=16, intelligence=14, wisdom=13, charisma=24)
@@ -60,28 +96,76 @@ game3 = Game(id=3, name="Vault of Kal'thari", description="Venture into the vaul
 
 db.session.add_all((user1, user2, user3, char1, char2, char3, char4, char5, game1, game2, game3))
 db.session.commit()
-##########################
-
-# for now just put a string in the login page and you will login
-@app.route("/", methods=["GET", "POST"])
-def login():
-	loginForm = LoginForm()
-	if request.method == 'GET':
-		return render_template("loginForm.html", form=loginForm)
-
-	if request.method == "POST":
-		if loginForm.validate():
-			return redirect(url_for("home"))
-		else:
-			for field,error in loginForm.errors.items():
-				flash(f"{field}: {error}")
-			return redirect(url_for("login"))
-
+#-----------------------------------------------------------------------------------------
+#-------------------------------------- HOME ROUTE ---------------------------------------
+#-----------------------------------------------------------------------------------------
 @app.route("/home/")
 def home():
     return render_template("home.j2", gameList=db.session.query(Game).all())
+#-----------------------------------------------------------------------------------------
+#---------------------------------- REGISTER NEW USER ------------------------------------
+#-----------------------------------------------------------------------------------------
+@app.get('/register/')
+def get_register():
+    form = RegisterForm()
+    return render_template('register.html', form=form)
 
-# route to make a new game
+@app.post('/register/')
+def post_register():
+    form = RegisterForm()
+    if form.validate():
+        # check if there is already a user with this username
+        user = User.query.filter_by(username=form.username.data).first()
+        # if the username is free, create a new user and send to login
+        if user is None:
+            user = User(username=form.username.data, password=form.password.data)
+            db.session.add(user)
+            db.session.commit()
+            return redirect(url_for('get_login'))
+        else: # if the username already exists
+            # flash a warning message and redirect to get registration form
+            flash('There is already an account with that username')
+            return redirect(url_for('get_register'))
+    else: # if the form was invalid
+        # flash error messages and redirect to get registration form again
+        for field, error in form.errors.items():
+            flash(f"{field}: {error}")
+        return redirect(url_for('get_register'))
+#-----------------------------------------------------------------------------------------
+#------------------------------------ USER LOG-IN ----------------------------------------
+#-----------------------------------------------------------------------------------------
+@app.get("/")
+def get_login():
+	login_form = LoginForm()
+	return render_template("loginForm.html", form=login_form)
+
+@app.post("/")
+def post_login():
+    form = LoginForm()
+    if form.validate():
+        # try to get the user associated with this username
+        user = User.query.filter_by(username=form.username.data).first()
+        # if this user exists and the password matches
+        if user is not None and user.verify_password(form.password.data):
+            # log this user in through the login_manager
+            login_user(user)
+            # redirect the user to the page they wanted or the home page
+            next = request.args.get('next')
+            if next is None or not next.startswith('/'):
+                next = url_for('home')
+            return redirect(next)
+        else: # if the user does not exist or the password is incorrect
+            # flash an error message and redirect to login form
+            flash('Invalid username or password')
+            return redirect(url_for('get_login'))
+    else: # if the form was invalid
+        # flash error messages and redirect to get login form again
+        for field, error in form.errors.items():
+            flash(f"{field}: {error}")
+        return redirect(url_for('get_login'))
+#-----------------------------------------------------------------------------------------
+#-------------------------------------- ADD GAME -----------------------------------------
+#-----------------------------------------------------------------------------------------
 @app.route("/addGame/", methods=["GET", "POST"])
 def addGame():
 	newGameForm = GameForm()
@@ -102,3 +186,12 @@ def addGame():
 @app.route("/game/", methods=["GET", "POST"])
 def game():
 	return "<h2> This will be a game </h2>"
+#-----------------------------------------------------------------------------------------
+#-------------------------------------- LOG OUT ------------------------------------------
+#-----------------------------------------------------------------------------------------
+@app.get('/logout/')
+@login_required
+def get_logout():
+    logout_user()
+    flash('You have been logged out')
+    return redirect(url_for('home'))
