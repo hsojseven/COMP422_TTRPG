@@ -182,7 +182,9 @@ def addGame():
 			for field,error in newGameForm.errors.items():
 				flash(f"{field}: {error}")
 			return redirect(url_for("addGame"))
-
+#-----------------------------------------------------------------------------------------
+#----------------------------------- GAMEPLAY SCREEN -------------------------------------
+#-----------------------------------------------------------------------------------------
 @app.route("/game/", methods=["GET", "POST"])
 def game():
 	return "<h2> This will be a game </h2>"
