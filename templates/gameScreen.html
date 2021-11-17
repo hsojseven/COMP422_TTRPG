@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="scripts/gameScreen.js"></script>
     </head>
     <header>
         <nav class="navbar navbar-expand-sm navbar-light bg-light">
@@ -23,7 +24,8 @@
           <div class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
             <span class="fs-5 fw-semibold"> Live Game Feed </span>
           </div>
-          <div class="panel-body border m-2 scrollarea" style="overflow-y: scroll !important; height:150px !important;">
+          <div id="msg-feed" class="panel-body border m-2 scrollarea" 
+            style="overflow-y: scroll !important; height:150px !important;">
               <!--LIST ITEMS GO HERE-->
               <div class="left clearfix border-bottom my-1" style="">
                 <p class="ml-1" style="color:MediumSeaGreen"> LIST ITEM </p>
@@ -39,16 +41,17 @@
           <div class="input-actions">
             <form role="form">
               <div class="form-group m-2">
-                <textarea class="form-control " style="resize:none; height:45px;" placeholder="Enter message..."></textarea>
+                <textarea id="msg-box" class="form-control " style="resize:none; height:45px;" 
+                  placeholder="Enter message..."></textarea>
               </div>
               <div class="form-group m-2">
-                <button type="button" class="btn border"> Send </button>
+                <button id="sendMsg-btn" type="button" class="btn border"> Send </button>
               </div>
             </form>
 
-            <button style="" class="btn btn-outline-success m-2" > Roll D6 </button>
-            <button style="" class="btn btn-outline-success m-2" > Roll D10 </button>
-            <button style="" class="btn btn-outline-success m-2" > Roll D20 </button>
+            <button id="roll-D6" style="" class="btn btn-outline-success m-2" > Roll D6 </button>
+            <button id="roll-D10" style="" class="btn btn-outline-success m-2" > Roll D10 </button>
+            <button id="roll-D20" style="" class="btn btn-outline-success m-2" > Roll D20 </button>
           </div>
         </div>
 

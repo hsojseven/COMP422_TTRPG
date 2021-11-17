@@ -62,7 +62,7 @@ class Game(db.Model):
     name = db.Column(db.Unicode, nullable=False)
     description = db.Column(db.Unicode, nullable=False)
     gamers = db.relationship('Player', backref='Gamers')
-    msgHistory = db.Column(db.Unicode, nullable=True)
+    #msgHistory = db.Column(db.Unicode, nullable=True)
 #-----------------------------------------------------------------------------------------
 #----------------------------------- CHARACTER TABLE -------------------------------------
 #-----------------------------------------------------------------------------------------
