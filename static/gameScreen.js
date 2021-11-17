@@ -27,22 +27,27 @@ window.addEventListener("DOMContentLoaded", function() {
 // Add message in message box to MSG feed
 function sendMessage()
 {
-    let msgText = document.getElementById("msg-box").textContent;
-    addMsgToFeed(msg);
+    let msgText = document.getElementById("msg-box");
+    addMsgToFeed(`${msgText.value}`);
+    msgText.value = "";
 }
 
+//TODO: Add a name to the front of the message - custom "name" or default "server"
 //create a div and add it to the feed
 function addMsgToFeed(msg) 
 {
     let msgFeed = document.getElementById("msg-feed");
 
+    //construct message div and its text
     var msgElement = document.createElement("div");
-    msgElement.class = "left clearfix border-bottom my-1";
+    msgElement.className = "left clearfix border-bottom my-1";
     var para = document.createElement("p");
+    para.className = "ml-2";
     para.textContent = msg;
     para.style.color="MediumSeaGreen";
     msgElement.appendChild(para);
     msgFeed.appendChild(msgElement);
+    msgFeed.scrollTop = msgFeed.scrollHeight;
 
     //add msg to DB
 }
