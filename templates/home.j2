@@ -12,20 +12,20 @@
             <a class="navbar-brand"> Home {{user}} </a>
           </div>
           <div class="d-flex">
+            <button style="" class="btn btn-outline-success mx-2 my-2 my-sm-0" type="logout" href="/characters/"> Characters </button>
             <button style="" class="btn btn-outline-success my-2 my-sm-0" type="logout" href="/"> logout </button>
-            <button style="" class="btn btn-outline-success my-2 my-sm-0" type="logout" href="/characters/"> Character </button>
           </div>
         </nav>
       </header>
     <body>
         <div class="row mx-1">
-            {% for game in gameList %}
+            {% for game, player in gameList %}
             <div class="col-md-3">
                 <div class="card my-2">
                     <div class="card-body">
                       <h5 class="card-title"> {{game.name}} </h5>
                       <p class="card-text"> {{game.description}} </p>
-                      <a href="#" class="btn btn-primary" href="/game/"> Join Game </a>
+                      <a class="btn btn-primary" href="/game/{{game.id}}"> Join Game </a>
                     </div>
                 </div>
             </div>

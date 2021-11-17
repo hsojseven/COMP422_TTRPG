@@ -176,9 +176,7 @@ def post_login():
 @app.route("/home/")
 @login_required
 def home():
-    #gameList=db.session.query(Game).all()
-    gameList=db.session.query(Player).filter(Player.userID == current_user.id).all()
-    print(gameList)
+    gameList=db.session.query(Game, Player).join(Game, Game.id==Player.gameID).filter(Player.userID == current_user.id).all()
     return render_template("home.j2", gameList=gameList, user=current_user.id)
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- ADD GAME -----------------------------------------
@@ -209,10 +207,10 @@ def addGame():
 #-----------------------------------------------------------------------------------------
 #----------------------------------- GAMEPLAY SCREEN -------------------------------------
 #-----------------------------------------------------------------------------------------
-@app.route("/game/", methods=["GET", "POST"])
+@app.route("/game/<id>", methods=["GET", "POST"])
 @login_required
-def game():
-	return "<h2> This will be a game </h2>"
+def game(id):
+	return render_template("gameScreen.j2", gameID=id)
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- LOG OUT ------------------------------------------
 #-----------------------------------------------------------------------------------------
