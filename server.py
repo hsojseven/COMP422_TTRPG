@@ -62,6 +62,7 @@ class Game(db.Model):
     name = db.Column(db.Unicode, nullable=False)
     description = db.Column(db.Unicode, nullable=False)
     gamers = db.relationship('Player', backref='Gamers')
+    msgHistory = db.Column(db.Unicode, nullable=True)
 #-----------------------------------------------------------------------------------------
 #----------------------------------- CHARACTER TABLE -------------------------------------
 #-----------------------------------------------------------------------------------------
@@ -210,7 +211,8 @@ def addGame():
 @app.route("/game/<id>", methods=["GET", "POST"])
 @login_required
 def game(id):
-	return render_template("gameScreen.j2", gameID=id)
+    game = db.session.query(Game).filter(Game.id == id).first()
+    return render_template("gameScreen.html", game=game)
 
 
 @app.route("/characters", methods=["GET", "POST"])

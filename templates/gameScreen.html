@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light bg-light">
+          <div class="container-fluid">
+            <a class="navbar-brand"> Adventure: {{game.name}} </a>
+          </div>
+          <div class="d-flex">
+            <button style="" class="btn btn-outline-success my-2 my-sm-0" type="logout" href="/"> logout </button>
+            <button style="" class="btn btn-outline-success my-2 my-sm-0" type="logout" href="/characters/"> Character </button>
+          </div>
+        </nav>
+      </header>
+    <body>
+        <div id="Sidebar" class="m-2 d-flex flex-column align-items-stretch flex-shrink-0 bg-white border" 
+          style="width: 380px; position:fixed; left:0; height:100%;">
+          <div class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+            <span class="fs-5 fw-semibold"> Live Game Feed </span>
+          </div>
+          <div class="panel-body border m-2 scrollarea" style="overflow-y: scroll !important; height:150px !important;">
+              <!--LIST ITEMS GO HERE-->
+              <div class="left clearfix border-bottom my-1" style="">
+                <p class="ml-1" style="color:MediumSeaGreen"> LIST ITEM </p>
+              </div>
+              <div class="left clearfix border-bottom my-1" style="">
+                <p class="ml-1" style="color:MediumSeaGreen"> LIST ITEM </p>
+              </div>
+              <div class="left clearfix border-bottom my-1" style="">
+                <p class="ml-1" style="color:MediumSeaGreen"> LIST ITEM </p>
+              </div>
+          </div>
+
+          <div class="input-actions">
+            <form role="form">
+              <div class="form-group m-2">
+                <textarea class="form-control " style="resize:none; height:45px;" placeholder="Enter message..."></textarea>
+              </div>
+              <div class="form-group m-2">
+                <button type="button" class="btn border"> Send </button>
+              </div>
+            </form>
+
+            <button style="" class="btn btn-outline-success m-2" > Roll D6 </button>
+            <button style="" class="btn btn-outline-success m-2" > Roll D10 </button>
+            <button style="" class="btn btn-outline-success m-2" > Roll D20 </button>
+          </div>
+        </div>
+
+        
+    </body>
+</html>
