@@ -4,7 +4,7 @@ from myforms import GameForm, LoginForm, RegisterForm, CharacterForm
 from flask_login import UserMixin, LoginManager, login_required
 from flask_login import login_user, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
-from hashing import UpdatedHasher
+from hashing import Hasher
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(32)
@@ -29,8 +29,8 @@ pepfile = os.path.join(scriptdir, "pepper.bin")
 with open(pepfile, 'rb') as fin:
   pepper_key = fin.read()
   
-# create a new instance of UpdatedHasher using that pepper key
-pwd_hasher = UpdatedHasher(pepper_key)
+# create a new instance of Hasher using that pepper key
+pwd_hasher = Hasher(pepper_key)
 #-----------------------------------------------------------------------------------------
 #------------------------------------- USER TABLE ----------------------------------------
 #-----------------------------------------------------------------------------------------
