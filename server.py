@@ -88,8 +88,13 @@ class Player(db.Model):
 
 # Use to clear tables and edit structure
 # WILL WIPE ALL DB DATA
-# db.drop_all()
-# db.create_all()
+<<<<<<< HEAD
+#db.drop_all()
+#db.create_all()
+=======
+#db.drop_all()
+#db.create_all()
+>>>>>>> 23e64e4a5503308df49e466f7c678754610eacbc
 
 user1 = User(id=1, username="bobBuilding")
 user2 = User(id=2, username="laryLobster")
@@ -213,7 +218,7 @@ def game(id):
 	return render_template("gameScreen.j2", gameID=id)
 
 
-@app.route("/characters", methods=["GET", "POST"])
+@app.route("/characters/", methods=["GET", "POST"])
 @login_required
 def get_characters():
     newCharacterForm = CharacterForm()
@@ -230,9 +235,9 @@ def get_characters():
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- LOG OUT ------------------------------------------
 #-----------------------------------------------------------------------------------------
-@app.route('/logout/', methods=["GET", "POST"])
+@app.get('/logout/')
 @login_required
 def get_logout():
     logout_user()
     flash('You have been logged out')
-    return redirect(url_for('/'))
+    return redirect(url_for('get_login'))
