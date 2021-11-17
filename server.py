@@ -213,12 +213,12 @@ def game(id):
 	return render_template("gameScreen.j2", gameID=id)
 
 
-@app.route("/characters", methods=["GET", "POST"])
+@app.route("/characters/", methods=["GET", "POST"])
 @login_required
 def get_characters():
     newCharacterForm = CharacterForm()
     if request.method == 'GET':
-        return render_template("characterForm.j2", characterList = db.session.query(Character).all(), user = current_user.id)
+        return render_template("characterForm.j2", form=newCharacterForm)
     if request.method == "POST":
         character = Character(id=current_user.id, name=newCharacterForm.name.data, strength=newCharacterForm.strength.data, dexterity=newCharacterForm.dexterity.data,
         constitution=newCharacterForm.constitution.data, intelligence=newCharacterForm.intelligence.data, wisdom=newCharacterForm.wisdom.data, charisma=newCharacterForm.charisma.data)
@@ -230,9 +230,9 @@ def get_characters():
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- LOG OUT ------------------------------------------
 #-----------------------------------------------------------------------------------------
-@app.route('/logout/', methods=["GET", "POST"])
+@app.get('/logout/')
 @login_required
 def get_logout():
     logout_user()
     flash('You have been logged out')
-    return redirect(url_for('/'))
+    return redirect(url_for('get_login'))
