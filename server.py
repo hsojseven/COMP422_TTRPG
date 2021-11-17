@@ -177,7 +177,7 @@ def post_login():
 @login_required
 def home():
     gameList=db.session.query(Game, Player).join(Game, Game.id==Player.gameID).filter(Player.userID == current_user.id).all()
-    return render_template("home.j2", gameList=gameList, user=current_user.id)
+    return render_template("home.html", gameList=gameList, user=current_user.id)
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- ADD GAME -----------------------------------------
 #-----------------------------------------------------------------------------------------
@@ -186,7 +186,7 @@ def home():
 def addGame():
     newGameForm = GameForm()
     if request.method == 'GET':
-        return render_template("gameForm.j2", form=newGameForm)
+        return render_template("gameForm.html", form=newGameForm)
 
     if request.method == "POST":
         if newGameForm.validate():
@@ -210,7 +210,7 @@ def addGame():
 @app.route("/game/<id>", methods=["GET", "POST"])
 @login_required
 def game(id):
-	return render_template("gameScreen.j2", gameID=id)
+	return render_template("gameScreen.html", gameID=id)
 
 
 @app.route("/characters/", methods=["GET", "POST"])
@@ -218,7 +218,7 @@ def game(id):
 def get_characters():
     newCharacterForm = CharacterForm()
     if request.method == 'GET':
-        return render_template("characterForm.j2", form=newCharacterForm)
+        return render_template("characterForm.html", form=newCharacterForm)
     if request.method == "POST":
         character = Character(id=current_user.id, name=newCharacterForm.name.data, strength=newCharacterForm.strength.data, dexterity=newCharacterForm.dexterity.data,
         constitution=newCharacterForm.constitution.data, intelligence=newCharacterForm.intelligence.data, wisdom=newCharacterForm.wisdom.data, charisma=newCharacterForm.charisma.data)
