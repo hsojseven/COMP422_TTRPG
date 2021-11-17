@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g, jsonify
-from myforms import GameForm, LoginForm, CharacterForm, RegisterForm 
+from myforms import GameForm, LoginForm, RegisterForm, CharacterForm
 from flask_login import UserMixin, LoginManager, login_required
 from flask_login import login_user, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
@@ -88,8 +88,8 @@ class Player(db.Model):
 
 # Use to clear tables and edit structure
 # WILL WIPE ALL DB DATA
-db.drop_all()
-db.create_all()
+#db.drop_all()
+#db.create_all()
 
 user1 = User(id=1, username="bobBuilding")
 user2 = User(id=2, username="laryLobster")
