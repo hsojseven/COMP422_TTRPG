@@ -91,7 +91,7 @@ class Player(db.Model):
 db.drop_all()
 db.create_all()
 
-user1 = User(id=1, username="bobBuilder")
+user1 = User(id=1, username="bobBuilding")
 user2 = User(id=2, username="laryLobster")
 user3 = User(id=3, username="davidV")
 
@@ -176,9 +176,7 @@ def post_login():
 @app.route("/home/")
 @login_required
 def home():
-    #gameList=db.session.query(Game).all()
-    gameList=db.session.query(Player).filter(Player.userID == current_user.id).all()
-    print(gameList)
+    gameList=db.session.query(Game, Player).join(Game, Game.id==Player.gameID).filter(Player.userID == current_user.id).all()
     return render_template("home.j2", gameList=gameList, user=current_user.id)
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- ADD GAME -----------------------------------------
@@ -206,8 +204,9 @@ def addGame():
                 flash(f"{field}: {error}")
             return redirect(url_for("addGame"))
 
-@app.route("/game/", methods=["GET", "POST"])
+@app.route("/game/<id>", methods=["GET", "POST"])
 @login_required
+<<<<<<< HEAD
 def game():
 	return "<h2> This will be a game </h2>"
 
@@ -226,6 +225,10 @@ def get_characters():
 
         return redirect(url_for("characters"))
 
+=======
+def game(id):
+	return render_template("gameScreen.j2", gameID=id)
+>>>>>>> 3bece55befa24ab8a216e4a9364b1c6b61e60c7f
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- LOG OUT ------------------------------------------
 #-----------------------------------------------------------------------------------------
