@@ -88,8 +88,8 @@ class Player(db.Model):
 
 # Use to clear tables and edit structure
 # WILL WIPE ALL DB DATA
-db.drop_all()
-db.create_all()
+# db.drop_all()
+# db.create_all()
 
 user1 = User(id=1, username="bobBuilding")
 user2 = User(id=2, username="laryLobster")
@@ -218,7 +218,7 @@ def game(id):
 def get_characters():
     newCharacterForm = CharacterForm()
     if request.method == 'GET':
-        return render_template("characterForm.j2", characterList = db.session.query(Character).all(), user = current_user.id)
+        return render_template("characterForm.j2", form=newCharacterForm)
     if request.method == "POST":
         character = Character(id=current_user.id, name=newCharacterForm.name.data, strength=newCharacterForm.strength.data, dexterity=newCharacterForm.dexterity.data,
         constitution=newCharacterForm.constitution.data, intelligence=newCharacterForm.intelligence.data, wisdom=newCharacterForm.wisdom.data, charisma=newCharacterForm.charisma.data)
