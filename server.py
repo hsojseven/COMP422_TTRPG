@@ -91,7 +91,7 @@ class Player(db.Model):
 #db.drop_all()
 #db.create_all()
 
-user1 = User(id=1, username="bobBuilder")
+user1 = User(id=1, username="bobBuilding")
 user2 = User(id=2, username="laryLobster")
 user3 = User(id=3, username="davidV")
 
