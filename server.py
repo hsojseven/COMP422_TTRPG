@@ -88,8 +88,8 @@ class Player(db.Model):
 
 # Use to clear tables and edit structure
 # WILL WIPE ALL DB DATA
-#db.drop_all()
-#db.create_all()
+db.drop_all()
+db.create_all()
 
 user1 = User(id=1, username="bobBuilder")
 user2 = User(id=2, username="laryLobster")

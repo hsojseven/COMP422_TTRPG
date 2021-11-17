@@ -6,6 +6,8 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 </head>
 <header>
   <nav class="navbar navbar-expand-sm navbar-light bg-light">
@@ -30,14 +32,18 @@
     <form method="POST">
       {# CSRF Protection #}
       {{ form.hidden_tag() }}
-      {{ form.username.label }} {{ form.username() }}
-      <br><br>
-      {{form.password.label}} {{form.password()}}
-      <br><br> 
-      {{ form.submit() }}
+      <br>
+      <div class="row mx-2 col-md-4">{{ form.username.label(class="form-control-label") }} {{ form.username(class="form-control") }}</div>
+      <br>
+      <div class="row mx-2 col-md-4">{{form.password.label(class="form-control-label")}} {{form.password(class="form-control")}}</div>
+      <br>
+      {{ form.submit(class="btn my-2 mx-4 btn-outline-info") }}
     </form>
 
-    <br><br>To register click <a href="{{url_for('get_register')}}">here</a>. <br>
+    <div class="p-3">
+      To register click <a href="{{url_for('get_register')}}">here</a>. 
+    </div>
+    <br>
   </main>
 </body>
 </html>
