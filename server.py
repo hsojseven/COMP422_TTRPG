@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g, jsonify
-from myforms import GameForm, LoginForm, RegisterForm
+from myforms import GameForm, LoginForm, RegisterForm, CharacterForm
 from flask_login import UserMixin, LoginManager, login_required
 from flask_login import login_user, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
@@ -91,7 +91,7 @@ class Player(db.Model):
 db.drop_all()
 db.create_all()
 
-user1 = User(id=1, username="bobBuilder")
+user1 = User(id=1, username="bobBuilding")
 user2 = User(id=2, username="laryLobster")
 user3 = User(id=3, username="davidV")
 
@@ -176,9 +176,7 @@ def post_login():
 @app.route("/home/")
 @login_required
 def home():
-    #gameList=db.session.query(Game).all()
-    gameList=db.session.query(Player).filter(Player.userID == current_user.id).all()
-    print(gameList)
+    gameList=db.session.query(Game, Player).join(Game, Game.id==Player.gameID).filter(Player.userID == current_user.id).all()
     return render_template("home.j2", gameList=gameList, user=current_user.id)
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- ADD GAME -----------------------------------------
@@ -206,14 +204,33 @@ def addGame():
                 flash(f"{field}: {error}")
             return redirect(url_for("addGame"))
 
-@app.route("/game/", methods=["GET", "POST"])
+#-----------------------------------------------------------------------------------------
+#----------------------------------- GAMEPLAY SCREEN -------------------------------------
+#-----------------------------------------------------------------------------------------
+@app.route("/game/<id>", methods=["GET", "POST"])
 @login_required
-def game():
-	return "<h2> This will be a game </h2>"
+def game(id):
+	return render_template("gameScreen.j2", gameID=id)
+
+
+@app.route("/characters", methods=["GET", "POST"])
+@login_required
+def get_characters():
+    newCharacterForm = CharacterForm()
+    if request.method == 'GET':
+        return render_template("characterForm.j2", characterList = db.session.query(Character).all(), user = current_user.id)
+    if request.method == "POST":
+        character = Character(id=current_user.id, name=newCharacterForm.name.data, strength=newCharacterForm.strength.data, dexterity=newCharacterForm.dexterity.data,
+        constitution=newCharacterForm.constitution.data, intelligence=newCharacterForm.intelligence.data, wisdom=newCharacterForm.wisdom.data, charisma=newCharacterForm.charisma.data)
+        db.sesssion.add(character)
+        db.session.flush()
+
+        return redirect(url_for("characters"))
+
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- LOG OUT ------------------------------------------
 #-----------------------------------------------------------------------------------------
-@app.get('/logout/')
+@app.route('/logout/', methods=["GET", "POST"])
 @login_required
 def get_logout():
     logout_user()
