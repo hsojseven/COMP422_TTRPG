@@ -192,6 +192,7 @@ def addGame():
         if newGameForm.validate():
             game = Game(name=newGameForm.name.data, description=newGameForm.description.data)
             db.session.add(game)
+            db.session.commit()
             db.session.flush()
 
             player = Player(userID=current_user.id, gameID=game.id, role=1)
@@ -220,12 +221,14 @@ def get_characters():
     if request.method == 'GET':
         return render_template("characterForm.html", form=newCharacterForm)
     if request.method == "POST":
-        character = Character(id=current_user.id, name=newCharacterForm.name.data, strength=newCharacterForm.strength.data, dexterity=newCharacterForm.dexterity.data,
-        constitution=newCharacterForm.constitution.data, intelligence=newCharacterForm.intelligence.data, wisdom=newCharacterForm.wisdom.data, charisma=newCharacterForm.charisma.data)
-        db.sesssion.add(character)
+        character = Character(id=current_user.id, name=newCharacterForm.name.data, 
+                              strength=newCharacterForm.strength.data, dexterity=newCharacterForm.dexterity.data, 
+                              constitution=newCharacterForm.constitution.data, intelligence=newCharacterForm.intelligence.data, 
+                              wisdom=newCharacterForm.wisdom.data, charisma=newCharacterForm.charisma.data)
+        db.session.add(character)
+        db.session.commit()
         db.session.flush()
-
-        return redirect(url_for("characters"))
+        return redirect(url_for("characters"))#------------------------------------------------------------------------------------------> THERE IS NO FUNCTION TITLED 'CHARACTERS'
 
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- LOG OUT ------------------------------------------

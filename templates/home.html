@@ -12,7 +12,7 @@
             <a class="navbar-brand"> Home {{user}} </a>
           </div>
           <div class="d-flex">
-            <a style="" class="btn btn-outline-success mx-2 my-2 my-sm-0" type="submit" href="/characters/"> Characters </a>
+            <a style="" class="btn btn-outline-success mx-2 my-2 my-sm-0" type="submit" href="{{url_for('get_characters')}}"> Characters </a>
             <a style="" class="btn btn-outline-success my-2 my-sm-0" type="logout" href="{{url_for('get_logout')}}"> logout </a>
           </div>
         </nav>
