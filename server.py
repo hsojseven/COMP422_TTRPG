@@ -209,11 +209,12 @@ def addGame():
 #-----------------------------------------------------------------------------------------
 #----------------------------------- GAMEPLAY SCREEN -------------------------------------
 #-----------------------------------------------------------------------------------------
-@app.route("/game/<id>", methods=["GET", "POST"])
+@app.route("/<userID>/game/<gameID>", methods=["GET", "POST"])
 @login_required
-def game(id):
-    game = db.session.query(Game).filter(Game.id == id).first()
-    return render_template("gameScreen.html", game=game)
+def game(userID, gameID):
+    game = db.session.query(Game).filter(Game.id == gameID).first()
+    user = db.session.query(User).filter(User.id == userID).first().username
+    return render_template("gameScreen.html", game=game, user=user)
 
 
 @app.route("/characters/", methods=["GET", "POST"])

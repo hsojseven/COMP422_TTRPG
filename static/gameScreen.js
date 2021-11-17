@@ -1,3 +1,5 @@
+//Matt Hay ~ Web ~ 11/17/21
+
 // add a listener so that when the document loads . . .
 // new listeners can be attached to elements safely
 window.addEventListener("DOMContentLoaded", function() {
@@ -6,7 +8,7 @@ window.addEventListener("DOMContentLoaded", function() {
 	const sendMsgBtn = document.getElementById("sendMsg-btn");
 	// Add event listener to the send btn
 	sendMsgBtn.addEventListener("click", sendMessage);
-
+    
     // Get reference to d6 btn
 	const rollD6Btn = document.getElementById("roll-D6");
 	// Add event listener to the d6 btn
@@ -42,9 +44,10 @@ function addMsgToFeed(msg)
     var msgElement = document.createElement("div");
     msgElement.className = "left clearfix border-bottom my-1";
     var para = document.createElement("p");
-    para.className = "ml-2";
+    para.className = "mx-2";
     para.textContent = msg;
     para.style.color="MediumSeaGreen";
+    para.style.wordBreak="break-all";
     msgElement.appendChild(para);
     msgFeed.appendChild(msgElement);
     msgFeed.scrollTop = msgFeed.scrollHeight;
