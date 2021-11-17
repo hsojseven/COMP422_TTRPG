@@ -40,6 +40,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.Unicode, nullable=False)
     password_hash = db.Column(db.LargeBinary) # hash is a binary attribute
     characters = db.relationship('Character', backref='Characters')
+    games = db.relationship('Player', backref='Games')
     
      # make a write-only password property that just updates the stored hash
     @property
@@ -60,6 +61,7 @@ class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.Unicode, nullable=False)
     description = db.Column(db.Unicode, nullable=False)
+    gamers = db.relationship('Player', backref='Gamers')
 #-----------------------------------------------------------------------------------------
 #----------------------------------- CHARACTER TABLE -------------------------------------
 #-----------------------------------------------------------------------------------------
@@ -74,11 +76,20 @@ class Character(db.Model):
     intelligence = db.Column(db.Integer, nullable=False)
     wisdom = db.Column(db.Integer, nullable=False)
     charisma = db.Column(db.Integer, nullable=False)
+#-----------------------------------------------------------------------------------------
+#----------------------------------- Player Table ----------------------------------------
+#-----------------------------------------------------------------------------------------
+class Player(db.Model):
+    __tablename__='Players'
+    id=db.Column(db.Integer, primary_key=True, autoincrement=True)
+    userID=db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
+    gameID=db.Column(db.Integer, db.ForeignKey('Games.id'), nullable=False)
+    role=db.Column(db.Integer, nullable=False) # 0=player, 1=DM
 
 # Use to clear tables and edit structure
 # WILL WIPE ALL DB DATA
-db.drop_all()
-db.create_all()
+#db.drop_all()
+#db.create_all()
 
 user1 = User(id=1, username="bobBuilder")
 user2 = User(id=2, username="laryLobster")
@@ -94,14 +105,10 @@ game1 = Game(id=1, name="Raiders", description="This game will be played MWF at 
 game2 = Game(id=2, name="Mists over Camelot", description="Game containing players that play a game sometimes.")
 game3 = Game(id=3, name="Vault of Kal'thari", description="Venture into the vault where many never return. Become rich, or die trying.")
 
-db.session.add_all((user1, user2, user3, char1, char2, char3, char4, char5, game1, game2, game3))
-db.session.commit()
-#-----------------------------------------------------------------------------------------
-#-------------------------------------- HOME ROUTE ---------------------------------------
-#-----------------------------------------------------------------------------------------
-@app.route("/home/")
-def home():
-    return render_template("home.j2", gameList=db.session.query(Game).all())
+player1 = Player(userID=user1.id, gameID=game1.id, role=0)
+
+#db.session.add_all((user1, user2, user3, char1, char2, char3, char4, char5, game1, game2, game3, player1))
+#db.session.commit()
 #-----------------------------------------------------------------------------------------
 #---------------------------------- REGISTER NEW USER ------------------------------------
 #-----------------------------------------------------------------------------------------
@@ -136,8 +143,8 @@ def post_register():
 #-----------------------------------------------------------------------------------------
 @app.get("/")
 def get_login():
-	login_form = LoginForm()
-	return render_template("loginForm.html", form=login_form)
+    login_form = LoginForm()
+    return render_template("loginForm.html", form=login_form)
 
 @app.post("/")
 def post_login():
@@ -164,26 +171,43 @@ def post_login():
             flash(f"{field}: {error}")
         return redirect(url_for('get_login'))
 #-----------------------------------------------------------------------------------------
+#-------------------------------------- HOME ROUTE ---------------------------------------
+#-----------------------------------------------------------------------------------------
+@app.route("/home/")
+@login_required
+def home():
+    #gameList=db.session.query(Game).all()
+    gameList=db.session.query(Player).filter(Player.userID == current_user.id).all()
+    print(gameList)
+    return render_template("home.j2", gameList=gameList, user=current_user.id)
+#-----------------------------------------------------------------------------------------
 #-------------------------------------- ADD GAME -----------------------------------------
 #-----------------------------------------------------------------------------------------
 @app.route("/addGame/", methods=["GET", "POST"])
+@login_required
 def addGame():
-	newGameForm = GameForm()
-	if request.method == 'GET':
-		return render_template("gameForm.j2", form=newGameForm)
+    newGameForm = GameForm()
+    if request.method == 'GET':
+        return render_template("gameForm.j2", form=newGameForm)
 
-	if request.method == "POST":
-		if newGameForm.validate():
-			game = Game(name=newGameForm.name.data, description=newGameForm.description.data)
-			db.session.add(game)
-			db.session.commit()
-			return redirect(url_for("home"))
-		else:
-			for field,error in newGameForm.errors.items():
-				flash(f"{field}: {error}")
-			return redirect(url_for("addGame"))
+    if request.method == "POST":
+        if newGameForm.validate():
+            game = Game(name=newGameForm.name.data, description=newGameForm.description.data)
+            db.session.add(game)
+            db.session.flush()
+
+            player = Player(userID=current_user.id, gameID=game.id, role=1)
+            db.session.add(player)
+            db.session.commit()
+
+            return redirect(url_for("home"))
+        else:
+            for field,error in newGameForm.errors.items():
+                flash(f"{field}: {error}")
+            return redirect(url_for("addGame"))
 
 @app.route("/game/", methods=["GET", "POST"])
+@login_required
 def game():
 	return "<h2> This will be a game </h2>"
 #-----------------------------------------------------------------------------------------
@@ -194,4 +218,4 @@ def game():
 def get_logout():
     logout_user()
     flash('You have been logged out')
-    return redirect(url_for('home'))
+    return redirect(url_for('/'))
