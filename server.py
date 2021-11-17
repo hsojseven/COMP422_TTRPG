@@ -178,7 +178,7 @@ def post_login():
 @login_required
 def home():
     gameList=db.session.query(Game, Player).join(Game, Game.id==Player.gameID).filter(Player.userID == current_user.id).all()
-    return render_template("home.html", gameList=gameList, user=current_user.id)
+    return render_template("home.html", gameList=gameList, user=current_user)
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- ADD GAME -----------------------------------------
 #-----------------------------------------------------------------------------------------
