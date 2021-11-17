@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g, jsonify
-from myforms import GameForm, LoginForm, RegisterForm
+from myforms import GameForm, LoginForm, CharacterForm, RegisterForm 
 from flask_login import UserMixin, LoginManager, login_required
 from flask_login import login_user, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
@@ -88,8 +88,8 @@ class Player(db.Model):
 
 # Use to clear tables and edit structure
 # WILL WIPE ALL DB DATA
-#db.drop_all()
-#db.create_all()
+db.drop_all()
+db.create_all()
 
 user1 = User(id=1, username="bobBuilding")
 user2 = User(id=2, username="laryLobster")
@@ -209,8 +209,29 @@ def addGame():
 #-----------------------------------------------------------------------------------------
 @app.route("/game/<id>", methods=["GET", "POST"])
 @login_required
+<<<<<<< HEAD
+def game():
+	return "<h2> This will be a game </h2>"
+
+
+@app.route("/characters", methods=["GET", "POST"])
+@login_required
+def get_characters():
+    newCharacterForm = CharacterForm()
+    if request.method == 'GET':
+        return render_template("characterForm.j2", characterList = db.session.query(Character).all(), user = current_user.id)
+    if request.method == "POST":
+        character = Character(id=current_user.id, name=newCharacterForm.name.data, strength=newCharacterForm.strength.data, dexterity=newCharacterForm.dexterity.data,
+        constitution=newCharacterForm.constitution.data, intelligence=newCharacterForm.intelligence.data, wisdom=newCharacterForm.wisdom.data, charisma=newCharacterForm.charisma.data)
+        db.sesssion.add(character)
+        db.session.flush()
+
+        return redirect(url_for("characters"))
+
+=======
 def game(id):
 	return render_template("gameScreen.j2", gameID=id)
+>>>>>>> 3bece55befa24ab8a216e4a9364b1c6b61e60c7f
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- LOG OUT ------------------------------------------
 #-----------------------------------------------------------------------------------------
