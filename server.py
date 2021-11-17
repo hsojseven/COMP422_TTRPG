@@ -36,7 +36,7 @@ pwd_hasher = Hasher(pepper_key)
 #-----------------------------------------------------------------------------------------
 class User(UserMixin, db.Model):
     __tablename__ = 'Users'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.Unicode, nullable=False)
     password_hash = db.Column(db.LargeBinary) # hash is a binary attribute
     characters = db.relationship('Character', backref='Characters')
@@ -58,7 +58,7 @@ class User(UserMixin, db.Model):
 #-----------------------------------------------------------------------------------------
 class Game(db.Model):
     __tablename__ = 'Games'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode, nullable=False)
     description = db.Column(db.Unicode, nullable=False)
     gamers = db.relationship('Player', backref='Gamers')
@@ -68,7 +68,7 @@ class Game(db.Model):
 #-----------------------------------------------------------------------------------------
 class Character(db.Model):
     __tablename__ = 'Characters'
-    id=db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id=db.Column(db.Integer, primary_key=True)
     userID=db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False) # FK
     name = db.Column(db.Unicode, nullable=False)
     strength = db.Column(db.Integer, nullable=False)
@@ -82,7 +82,7 @@ class Character(db.Model):
 #-----------------------------------------------------------------------------------------
 class Player(db.Model):
     __tablename__='Players'
-    id=db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id=db.Column(db.Integer, primary_key=True)
     userID=db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
     gameID=db.Column(db.Integer, db.ForeignKey('Games.id'), nullable=False)
     role=db.Column(db.Integer, nullable=False) # 0=player, 1=DM
