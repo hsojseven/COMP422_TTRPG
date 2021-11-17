@@ -209,9 +209,8 @@ def addGame():
 #-----------------------------------------------------------------------------------------
 @app.route("/game/<id>", methods=["GET", "POST"])
 @login_required
-<<<<<<< HEAD
-def game():
-	return "<h2> This will be a game </h2>"
+def game(id):
+	return render_template("gameScreen.j2", gameID=id)
 
 
 @app.route("/characters", methods=["GET", "POST"])
@@ -228,10 +227,6 @@ def get_characters():
 
         return redirect(url_for("characters"))
 
-=======
-def game(id):
-	return render_template("gameScreen.j2", gameID=id)
->>>>>>> 3bece55befa24ab8a216e4a9364b1c6b61e60c7f
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- LOG OUT ------------------------------------------
 #-----------------------------------------------------------------------------------------
