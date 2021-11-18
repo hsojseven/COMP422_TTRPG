@@ -224,14 +224,21 @@ def get_characters():
     if request.method == 'GET':
         return render_template("characterForm.html", form=newCharacterForm)
     if request.method == "POST":
-        character = Character(id=current_user.id, name=newCharacterForm.name.data, 
-                              strength=newCharacterForm.strength.data, dexterity=newCharacterForm.dexterity.data, 
-                              constitution=newCharacterForm.constitution.data, intelligence=newCharacterForm.intelligence.data, 
-                              wisdom=newCharacterForm.wisdom.data, charisma=newCharacterForm.charisma.data)
-        db.session.add(character)
-        db.session.commit()
-        db.session.flush()
-        return redirect(url_for("characters"))#------------------------------------------------------------------------------------------> THERE IS NO FUNCTION TITLED 'CHARACTERS'
+        if newCharacterForm.validate():
+            db.session.query(User, Character).join(User, User.id==Character.userID).all()
+            character = Character(id=Character.id, userID=current_user.id, name=newCharacterForm.name.data, 
+                                strength=newCharacterForm.strength.data, dexterity=newCharacterForm.dexterity.data, 
+                                constitution=newCharacterForm.constitution.data, intelligence=newCharacterForm.intelligence.data, 
+                                wisdom=newCharacterForm.wisdom.data, charisma=newCharacterForm.charisma.data)
+            db.session.add(character)
+            db.session.commit()
+            db.session.flush()
+            return redirect(url_for("get_characters"))
+        else:
+            for field,error in newGameForm.errors.items():
+                flash(f"{field}: {error}")
+            return redirect(url_for("get_characters"))
+            #------------------------------------------------------------------------------------------> THERE IS NO FUNCTION TITLED 'CHARACTERS'
 
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- LOG OUT ------------------------------------------

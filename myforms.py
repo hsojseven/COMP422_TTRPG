@@ -25,10 +25,10 @@ class RegisterForm(FlaskForm):
 
 class CharacterForm(FlaskForm):
   name = StringField("Enter Name: ", validators=[InputRequired()])
-  strength = IntegerField("Enter Strength: ", validators=[InputRequired(), Length(min=0, max=20)]),
-  dexterity = IntegerField("Enter Dexterity: ", validators=[InputRequired(), Length(min=0, max=20)]),
-  constitution = IntegerField("Enter Constitution: ", validators=[InputRequired(), Length(min=0, max=20)]),
-  intelligence = IntegerField("Enter Intelligence: ", validators=[InputRequired(), Length(min=0, max=20)]),
-  wisdom = IntegerField("Enter Wisdom: ", validators=[InputRequired(), Length(min=0, max=20)]),
-  charisma = IntegerField("Enter Charisma: ", validators=[InputRequired(), Length(min=0, max=20)]),
+  strength = IntegerField("Enter Strength: ", validators=[InputRequired(), Length(min=0, max=20)])
+  dexterity = IntegerField("Enter Dexterity: ", validators=[InputRequired(), Length(min=0, max=20)])
+  constitution = IntegerField("Enter Constitution: ", validators=[InputRequired(), Length(min=0, max=20)])
+  intelligence = IntegerField("Enter Intelligence: ", validators=[InputRequired(), Length(min=0, max=20)])
+  wisdom = IntegerField("Enter Wisdom: ", validators=[InputRequired(), Length(min=0, max=20)])
+  charisma = IntegerField("Enter Charisma: ", validators=[InputRequired(), Length(min=0, max=20)])
   submit = SubmitField("Register")

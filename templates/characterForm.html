@@ -18,27 +18,61 @@
       </div>
     {% endfor %}
   </div>
-  <main>
+  <main>  
     <form method="POST">
       {# CSRF Protection #}
       {{ form.hidden_tag() }}
       {# add name field's label and input elements #}
-      {{ form.name.label }}
-      {{ form.name() }}
-      {{ form.strength.label }}
-      {{ form.strength() }}
-      {{ form.dexterity.label }}
-      {{ form.dexterity() }}
-      {{ form.constitution.label }}
-      {{ form.constitution() }}
-      {{ form.intelligence.label }}
-      {{ form.intelligence() }}
-      {{ form.wisdom.label }}
-      {{ form.wisdom() }}
-      {{ form.charisma.label }}
-      {{ form.charisma() }}
-      {# add submit button #}
-      {{ form.submit() }}
+      <table>
+        <tr>
+          <td>
+            {{ form.name.label }}
+            {{ form.name() }}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            {{ form.strength.label }}
+            {{ form.strength() }}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            {{ form.dexterity.label }}
+            {{ form.dexterity() }}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            {{ form.constitution.label }}
+            {{ form.constitution() }}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            {{ form.intelligence.label }}
+            {{ form.intelligence() }}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            {{ form.wisdom.label }}
+            {{ form.wisdom() }}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            {{ form.charisma.label }}
+            {{ form.charisma() }}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            {# add submit button #}
+            {{ form.submit() }}
+          </td>
+        </tr>
+      </table>
     </form>
   </main>
 </body>
