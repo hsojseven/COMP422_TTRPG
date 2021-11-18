@@ -9,7 +9,7 @@ from cryptography.fernet import Fernet
 from passlib.hash import argon2
 
 
-class UpdatedHasher:
+class Hasher:
     def __init__(self, pepper_key):
         self.pepper = Fernet(pepper_key)
 

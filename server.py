@@ -4,7 +4,7 @@ from myforms import GameForm, LoginForm, RegisterForm, CharacterForm
 from flask_login import UserMixin, LoginManager, login_required
 from flask_login import login_user, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
-from hashing import UpdatedHasher
+from hashing import Hasher
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(32)
@@ -29,14 +29,14 @@ pepfile = os.path.join(scriptdir, "pepper.bin")
 with open(pepfile, 'rb') as fin:
   pepper_key = fin.read()
   
-# create a new instance of UpdatedHasher using that pepper key
-pwd_hasher = UpdatedHasher(pepper_key)
+# create a new instance of Hasher using that pepper key
+pwd_hasher = Hasher(pepper_key)
 #-----------------------------------------------------------------------------------------
 #------------------------------------- USER TABLE ----------------------------------------
 #-----------------------------------------------------------------------------------------
 class User(UserMixin, db.Model):
     __tablename__ = 'Users'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.Unicode, nullable=False)
     password_hash = db.Column(db.LargeBinary) # hash is a binary attribute
     characters = db.relationship('Character', backref='Characters')
@@ -58,7 +58,7 @@ class User(UserMixin, db.Model):
 #-----------------------------------------------------------------------------------------
 class Game(db.Model):
     __tablename__ = 'Games'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode, nullable=False)
     description = db.Column(db.Unicode, nullable=False)
     gamers = db.relationship('Player', backref='Gamers')
@@ -68,7 +68,7 @@ class Game(db.Model):
 #-----------------------------------------------------------------------------------------
 class Character(db.Model):
     __tablename__ = 'Characters'
-    id=db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id=db.Column(db.Integer, primary_key=True)
     userID=db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False) # FK
     name = db.Column(db.Unicode, nullable=False)
     strength = db.Column(db.Integer, nullable=False)
@@ -82,7 +82,7 @@ class Character(db.Model):
 #-----------------------------------------------------------------------------------------
 class Player(db.Model):
     __tablename__='Players'
-    id=db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id=db.Column(db.Integer, primary_key=True)
     userID=db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
     gameID=db.Column(db.Integer, db.ForeignKey('Games.id'), nullable=False)
     role=db.Column(db.Integer, nullable=False) # 0=player, 1=DM
@@ -178,7 +178,7 @@ def post_login():
 @login_required
 def home():
     gameList=db.session.query(Game, Player).join(Game, Game.id==Player.gameID).filter(Player.userID == current_user.id).all()
-    return render_template("home.html", gameList=gameList, user=current_user.id)
+    return render_template("home.html", gameList=gameList, user=current_user)
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- ADD GAME -----------------------------------------
 #-----------------------------------------------------------------------------------------
