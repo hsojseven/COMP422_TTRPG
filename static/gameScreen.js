@@ -30,8 +30,8 @@ window.addEventListener("DOMContentLoaded", function() {
 function sendMessage()
 {
     let msgText = document.getElementById("msg-box");
-    //let username = document.getElementById("username");
-    addMsgToFeed(`${msgText.value}`);
+    let username = document.getElementById("username");
+    addMsgToFeed(`${username.className}: ${msgText.value}`);
     msgText.value = "";
 }
 
@@ -44,12 +44,12 @@ function addMsgToFeed(msg)
     //construct message div and its text
     var msgElement = document.createElement("div");
     msgElement.className = "left clearfix border-bottom my-1";
-    var para = document.createElement("p");
-    para.className = "mx-2";
-    para.textContent = msg;
-    para.style.color="MediumSeaGreen";
-    para.style.wordBreak="break-all";
-    msgElement.appendChild(para);
+    var msgPara = document.createElement("p");
+    msgPara.className = "mx-2";
+    msgPara.textContent = msg;
+    msgPara.style.color="MediumSeaGreen";
+    msgPara.style.wordBreak="break-all";
+    msgElement.appendChild(msgPara);
     msgFeed.appendChild(msgElement);
     msgFeed.scrollTop = msgFeed.scrollHeight;
 
@@ -60,19 +60,22 @@ function addMsgToFeed(msg)
 function rollD6()
 {
     let roll = Math.floor(Math.random() * 6);
-    addMsgToFeed(`User rolled a ${roll} with the D6 die`);
+    let username = document.getElementById("username");
+    addMsgToFeed(`${username.className} rolled a ${roll} with the D6 die`);
 }
 
 //roll D10 die and add its output to MSG feed
 function rollD10()
 {
     let roll = Math.floor(Math.random() * 10);
-    addMsgToFeed(`User rolled a ${roll} with the D10 die`);
+    let username = document.getElementById("username");
+    addMsgToFeed(`${username.className} rolled a ${roll} with the D10 die`);
 }
 
 //roll D20 die and add its output to MSG feed
 function rollD20()
 {
     let roll = Math.floor(Math.random() * 20);
-    addMsgToFeed(`User rolled a ${roll} with the D20 die`);
+    let username = document.getElementById("username");
+    addMsgToFeed(`${username.className} rolled a ${roll} with the D20 die`);
 }
