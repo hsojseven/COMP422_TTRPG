@@ -30,6 +30,7 @@ window.addEventListener("DOMContentLoaded", function() {
 function sendMessage()
 {
     let msgText = document.getElementById("msg-box");
+    //let username = document.getElementById("username");
     addMsgToFeed(`${msgText.value}`);
     msgText.value = "";
 }

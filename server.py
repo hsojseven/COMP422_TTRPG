@@ -213,8 +213,8 @@ def addGame():
 @login_required
 def game(userID, gameID):
     game = db.session.query(Game).filter(Game.id == gameID).first()
-    user = db.session.query(User).filter(User.id == userID).first().username
-    return render_template("gameScreen.html", game=game, user=user)
+    username = db.session.query(User).filter(User.id == userID).first().username
+    return render_template("gameScreen.html", game=game, username=username)
 
 
 @app.route("/characters/", methods=["GET", "POST"])
