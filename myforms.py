@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, IntegerField
 from wtforms.fields.simple import TextAreaField
-from wtforms.validators import InputRequired, EqualTo, Length
+from wtforms.validators import InputRequired, EqualTo, Length, NumberRange
 
 # define our own FlaskForm subclass for our form
 class LoginForm(FlaskForm):
@@ -25,10 +25,10 @@ class RegisterForm(FlaskForm):
 
 class CharacterForm(FlaskForm):
   name = StringField("Enter Name: ", validators=[InputRequired()])
-  strength = IntegerField("Enter Strength: ", validators=[InputRequired(), Length(min=0, max=20)])
-  dexterity = IntegerField("Enter Dexterity: ", validators=[InputRequired(), Length(min=0, max=20)])
-  constitution = IntegerField("Enter Constitution: ", validators=[InputRequired(), Length(min=0, max=20)])
-  intelligence = IntegerField("Enter Intelligence: ", validators=[InputRequired(), Length(min=0, max=20)])
-  wisdom = IntegerField("Enter Wisdom: ", validators=[InputRequired(), Length(min=0, max=20)])
-  charisma = IntegerField("Enter Charisma: ", validators=[InputRequired(), Length(min=0, max=20)])
+  strength = IntegerField("Enter Strength: ", validators=[InputRequired(), NumberRange(min=0, max=20, message="Please enter a number between 0 and 20.")])
+  dexterity = IntegerField("Enter Dexterity: ", validators=[InputRequired(), NumberRange(min=0, max=20, message="Please enter a number between 0 and 20.")])
+  constitution = IntegerField("Enter Constitution: ", validators=[InputRequired(), NumberRange(min=0, max=20, message="Please enter a number between 0 and 20.")])
+  intelligence = IntegerField("Enter Intelligence: ", validators=[InputRequired(), NumberRange(min=0, max=20, message="Please enter a number between 0 and 20.")])
+  wisdom = IntegerField("Enter Wisdom: ", validators=[InputRequired(), NumberRange(min=0, max=20, message="Please enter a number between 0 and 20.")])
+  charisma = IntegerField("Enter Charisma: ", validators=[InputRequired(), NumberRange(min=0, max=20, message="Please enter a number between 0 and 20.")])
   submit = SubmitField("Register")

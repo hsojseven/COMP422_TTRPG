@@ -226,7 +226,7 @@ def get_characters():
     if request.method == "POST":
         if newCharacterForm.validate():
             db.session.query(User, Character).join(User, User.id==Character.userID).all()
-            character = Character(id=Character.id, userID=current_user.id, name=newCharacterForm.name.data, 
+            character = Character(userID=current_user.id, name=newCharacterForm.name.data, 
                                 strength=newCharacterForm.strength.data, dexterity=newCharacterForm.dexterity.data, 
                                 constitution=newCharacterForm.constitution.data, intelligence=newCharacterForm.intelligence.data, 
                                 wisdom=newCharacterForm.wisdom.data, charisma=newCharacterForm.charisma.data)
@@ -235,7 +235,7 @@ def get_characters():
             db.session.flush()
             return redirect(url_for("get_characters"))
         else:
-            for field,error in newGameForm.errors.items():
+            for field,error in newCharacterForm.errors.items():
                 flash(f"{field}: {error}")
             return redirect(url_for("get_characters"))
             #------------------------------------------------------------------------------------------> THERE IS NO FUNCTION TITLED 'CHARACTERS'
