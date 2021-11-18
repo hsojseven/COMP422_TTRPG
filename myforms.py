@@ -25,11 +25,12 @@ class RegisterForm(FlaskForm):
   submit = SubmitField("Register")
 
 class CharacterForm(FlaskForm):
+  integer_message = "Value must be between 0 and 20"
   name = StringField("Character Name: ", validators=[InputRequired()])
-  strength = IntegerField("Strength (between 0 and 20): ", validators=[InputRequired(), NumberRange(min=0, max=20, message="Value must be between 0 and 20.")])
-  dexterity = IntegerField("Dexterity (between 0 and 20): ", validators=[InputRequired(), NumberRange(min=0, max=20, message="Value must be between 0 and 20.")])
-  constitution = IntegerField("Constitution (between 0 and 20): ", validators=[InputRequired(), NumberRange(min=0, max=20, message="Value must be between 0 and 20.")])
-  intelligence = IntegerField("Intelligence (between 0 and 20): ", validators=[InputRequired(), NumberRange(min=0, max=20, message="Value must be between 0 and 20.")])
-  wisdom = IntegerField("Wisdom (between 0 and 20): ", validators=[InputRequired(), NumberRange(min=0, max=20, message="Value must be between 0 and 20.")])
-  charisma = IntegerField("Charisma (between 0 and 20): ", validators=[InputRequired(), NumberRange(min=0, max=20, message="Value must be between 0 and 20.")])
+  strength = IntegerField("Strength (between 0 and 20): ", validators=[InputRequired(), NumberRange(min=0, max=20, message=integer_message)])
+  dexterity = IntegerField("Dexterity (between 0 and 20): ", validators=[InputRequired(), NumberRange(min=0, max=20, message=integer_message)])
+  constitution = IntegerField("Constitution (between 0 and 20): ", validators=[InputRequired(), NumberRange(min=0, max=20, message=integer_message)])
+  intelligence = IntegerField("Intelligence (between 0 and 20): ", validators=[InputRequired(), NumberRange(min=0, max=20, message=integer_message)])
+  wisdom = IntegerField("Wisdom (between 0 and 20): ", validators=[InputRequired(), NumberRange(min=0, max=20, message=integer_message)])
+  charisma = IntegerField("Charisma (between 0 and 20): ", validators=[InputRequired(), NumberRange(min=0, max=20, message=integer_message)])
   submit = SubmitField("Register")
