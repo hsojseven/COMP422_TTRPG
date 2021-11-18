@@ -6,6 +6,8 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 </head>
 <body>
   <div class="container">
@@ -19,60 +21,21 @@
     {% endfor %}
   </div>
   <main>  
+    <div class="p-4"><h5> Create New Character </h5></div>
     <form method="POST">
       {# CSRF Protection #}
       {{ form.hidden_tag() }}
       {# add name field's label and input elements #}
-      <table>
-        <tr>
-          <td>
-            {{ form.name.label }}
-            {{ form.name() }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            {{ form.strength.label }}
-            {{ form.strength() }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            {{ form.dexterity.label }}
-            {{ form.dexterity() }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            {{ form.constitution.label }}
-            {{ form.constitution() }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            {{ form.intelligence.label }}
-            {{ form.intelligence() }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            {{ form.wisdom.label }}
-            {{ form.wisdom() }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            {{ form.charisma.label }}
-            {{ form.charisma() }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            {# add submit button #}
-            {{ form.submit() }}
-          </td>
-        </tr>
-      </table>
+      <div class="row mx-2 col-md-3">{{ form.name.label(class="form-control-label") }} {{ form.name(class="form-control form-control-lg") }}</div>
+      <div class="row mx-2 col-md-3">{{ form.strength.label(class="form-control-label") }} {{ form.strength(class="form-control form-control-lg") }}</div>
+      <div class="row mx-2 col-md-3">{{ form.dexterity.label(class="form-control-label") }}  {{ form.dexterity(class="form-control form-control-lg") }}</div>
+      <div class="row mx-2 col-md-3">{{ form.constitution.label(class="form-control-label") }} {{ form.constitution(class="form-control form-control-lg") }}</div>
+      <div class="row mx-2 col-md-3">{{ form.intelligence.label(class="form-control-label") }} {{ form.intelligence(class="form-control form-control-lg") }}</div>
+      <div class="row mx-2 col-md-3">{{ form.wisdom.label(class="form-control-label") }} {{ form.wisdom(class="form-control form-control-lg") }}</div>
+      <div class="row mx-2 col-md-3">{{ form.charisma.label(class="form-control-label") }} {{ form.charisma(class="form-control form-control-lg") }}</div>
+      {# add submit button #}
+      {{ form.submit(class="btn my-2 mx-4 btn-outline-info") }}
+     
     </form>
   </main>
 </body>
