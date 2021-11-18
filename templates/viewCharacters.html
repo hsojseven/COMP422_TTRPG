@@ -9,7 +9,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-light bg-light">
           <div class="container-fluid">
-            <a class="navbar-brand"> Welcome Back  {{user.username}} </a>
+            <a class="navbar-brand"> Characters </a>
           </div>
           <div class="d-flex">
             <a style="" class="btn btn-outline-success mx-2 my-2 my-sm-0" type="submit" href="{{url_for('viewCharacters')}}"> Characters </a>
@@ -19,19 +19,31 @@
       </header>
     <body>
         <div class="row mx-1">
-            {% for game, player in gameList %}
+            {% for char in charList %}
             <div class="col-md-3">
                 <div class="card my-2">
                     <div class="card-body">
-                      <h5 class="card-title"> {{game.name}} </h5>
-                      <p class="card-text"> {{game.description}} </p>
-                      <a class="btn btn-primary" href="/{{user.id}}/game/{{game.id}}"> Join Game </a>
+                      <h5 class="card-title"> {{char.name}} </h5>
+                      <p class="card-text"> 
+                            Str: {{char.strength}}
+                           <br>
+                           Dex: {{char.dexterity}}
+                           <br>
+                           Con: {{char.constitution}}
+                           <br>
+                           Int: {{char.intelligence}}
+                           <br>
+                           Wis: {{char.wisdom}}
+                           <br>
+                           Cha: {{char.charisma}}
+                        </p>
+                      <a class="btn btn-primary" href="#"> Edit </a>
                     </div>
                 </div>
             </div>
             {%endfor%}
         </div>
 
-        <a style="position:absolute;bottom:10px;right:10px;margin:0;padding:5px 3px;" class="btn btn-outline-success my-2 my-sm-0" type="createGame" href="/addGame/"> Add Game </a>
+        <a style="position:absolute;bottom:10px;right:10px;margin:0;padding:5px 3px;" class="btn btn-outline-success my-2 my-sm-0" type="createGame" href="/characters/"> Add Character </a>
     </body>
 </html>

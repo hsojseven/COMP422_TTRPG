@@ -180,6 +180,14 @@ def home():
     gameList=db.session.query(Game, Player).join(Game, Game.id==Player.gameID).filter(Player.userID == current_user.id).all()
     return render_template("home.html", gameList=gameList, user=current_user)
 #-----------------------------------------------------------------------------------------
+#-------------------------------------- CHARACTER ROUTE ----------------------------------
+#-----------------------------------------------------------------------------------------
+@app.route("/viewCharacters/")
+@login_required
+def viewCharacters():
+    characterList=db.session.query(Character).filter(Character.userID == current_user.id).all()
+    return render_template("viewCharacters.html", charList=characterList)
+#-----------------------------------------------------------------------------------------
 #-------------------------------------- ADD GAME -----------------------------------------
 #-----------------------------------------------------------------------------------------
 @app.route("/addGame/", methods=["GET", "POST"])
@@ -233,7 +241,7 @@ def get_characters():
             db.session.add(character)
             db.session.commit()
             db.session.flush()
-            return redirect(url_for("home"))
+            return redirect(url_for("viewCharacters"))
         else:
             for field,error in newCharacterForm.errors.items():
                 flash(f"{field}: {error}")
