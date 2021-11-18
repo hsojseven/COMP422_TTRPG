@@ -233,7 +233,7 @@ def get_characters():
             db.session.add(character)
             db.session.commit()
             db.session.flush()
-            return redirect(url_for("get_characters"))
+            return redirect(url_for("home"))
         else:
             for field,error in newCharacterForm.errors.items():
                 flash(f"{field}: {error}")
