@@ -12,13 +12,13 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-light bg-light">
           <div class="container-fluid">
-            <a class="navbar-brand"> Game: {{game.name}} </a>
+            <a class="navbar-brand" style="font-weight:bold"> Game: {{game.name}} </a>
           </div>
           <div class="d-flex">
             <a href="{{url_for('home')}}">
             <button style="" class="btn btn-outline-success my-2 my-sm-0" type="submit"> Home </button>
             </a>
-            <a href="{{url_for('get_characters')}}">
+            <a href="{{url_for('viewCharacters')}}">
             <button style="" class="btn btn-outline-success my-2 my-sm-0 mx-2" type="submit"> Characters </button>
             </a>
           </div>

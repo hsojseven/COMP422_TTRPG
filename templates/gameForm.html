@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <title> New Game Form </title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <!-- Bootstrap CSS -->
@@ -9,16 +10,15 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-light bg-light">
           <div class="container-fluid">
-            <a class="navbar-brand"> Add Game </a>
+            <a class="navbar-brand" style="font-weight:bold"> Add Game </a>
           </div>
           <div class="d-flex">
             <a href="{{url_for('get_logout')}}">
-            <button style="" class="btn btn-outline-success my-2 my-sm-0" type="logout"> logout </button>
+            <button style="" class="btn btn-outline-success my-2 my-sm-0" type="logout"> Logout </button>
             </a>
           </div>
         </nav>
-      </header>
-    <body>
+        {######################################## ERROR MESSAGES #################################################}
         <div class="container">
             {% for message in get_flashed_messages() %}
                 <div class="alert alert-warning">
@@ -29,11 +29,16 @@
                 </div>
             {% endfor %}
         </div>
+    </header>
+    {############################################## GAME FORM ####################################################}
+    <body>
+        <div class="m-auto p-5" style="width: 500px;">
             <form action="#" method="POST">
                 {{ form.hidden_tag() }}
-                <div class="row mx-2 col-md-4">{{ form.name.label(class="form-control-label") }} {{ form.name(class="form-control form-control-lg") }}</div>
-                <div class="row mx-2 col-md-6">{{ form.description.label(class="form-control-label") }} {{ form.description(class="form-control form-control-lg") }}</div>
-                {{ form.submit(class="btn my-2 mx-4 btn-outline-info") }}
+                <p> <div class="pt-4">{{form.name(class="form-control", placeholder="Game Name") }}</div> </p>
+                <p> <div class="pt-4">{{form.description(class="form-control", placeholder="Game Description") }}</div> </p>
+                <p class="pt-3"> {{form.submit(class="btn btn-outline-success btn-md btn-block") }} </p>
+                <p> <a style="" class="btn btn-outline-success btn-md btn-block" type="Home" href="{{url_for('home')}}"> Cancel </a>  </p>
             </form>
     </body>
 </html>
