@@ -172,31 +172,17 @@ def post_login():
             flash(f"{field}: {error}")
         return redirect(url_for('get_login'))
 #-----------------------------------------------------------------------------------------
-#-------------------------------------- HOME ROUTE ---------------------------------------
+#--------------------------------------- HOME ROUTE --------------------------------------
 #-----------------------------------------------------------------------------------------
-@app.route("/home/")
+@app.route("/home/", methods=["GET", "POST"])
 @login_required
 def home():
-    gameList=db.session.query(Game, Player).join(Game, Game.id==Player.gameID).filter(Player.userID == current_user.id).all()
-    return render_template("home.html", gameList=gameList, user=current_user)
-#-----------------------------------------------------------------------------------------
-#-------------------------------------- CHARACTER ROUTE ----------------------------------
-#-----------------------------------------------------------------------------------------
-@app.route("/viewCharacters/")
-@login_required
-def viewCharacters():
-    characterList=db.session.query(Character).filter(Character.userID == current_user.id).all()
-    return render_template("viewCharacters.html", charList=characterList)
-#-----------------------------------------------------------------------------------------
-#-------------------------------------- ADD GAME -----------------------------------------
-#-----------------------------------------------------------------------------------------
-@app.route("/addGame/", methods=["GET", "POST"])
-@login_required
-def addGame():
     newGameForm = GameForm()
+    gameList=db.session.query(Game, Player).join(Game, Game.id==Player.gameID).filter(Player.userID == current_user.id).all()
+    
     if request.method == 'GET':
-        return render_template("gameForm.html", form=newGameForm)
-
+        return render_template("home.html", gameList=gameList, user=current_user, form=newGameForm)
+    
     if request.method == "POST":
         if newGameForm.validate():
             game = Game(name=newGameForm.name.data, description=newGameForm.description.data)
@@ -213,24 +199,17 @@ def addGame():
             for field,error in newGameForm.errors.items():
                 flash(f"{field}: {error}")
             return redirect(url_for("addGame"))
-
 #-----------------------------------------------------------------------------------------
-#----------------------------------- GAMEPLAY SCREEN -------------------------------------
+#-------------------------------------- CHARACTER ROUTE ----------------------------------
 #-----------------------------------------------------------------------------------------
-@app.route("/<userID>/game/<gameID>", methods=["GET", "POST"])
+@app.route("/viewCharacters/", methods=["GET", "POST"])
 @login_required
-def game(userID, gameID):
-    game = db.session.query(Game).filter(Game.id == gameID).first()
-    user = db.session.query(User).filter(User.id == userID).first().username
-    return render_template("gameScreen.html", game=game, user=user)
-
-
-@app.route("/characters/", methods=["GET", "POST"])
-@login_required
-def get_characters():
+def viewCharacters():
     newCharacterForm = CharacterForm()
+    characterList=db.session.query(Character).filter(Character.userID == current_user.id).all()
     if request.method == 'GET':
-        return render_template("characterForm.html", form=newCharacterForm)
+        return render_template("viewCharacters.html", form=newCharacterForm, charList=characterList)
+    
     if request.method == "POST":
         if newCharacterForm.validate():
             db.session.query(User, Character).join(User, User.id==Character.userID).all()
@@ -245,7 +224,16 @@ def get_characters():
         else:
             for field,error in newCharacterForm.errors.items():
                 flash(f"{field}: {error}")
-            return redirect(url_for("get_characters"))
+            return redirect(url_for("viewCharacters"))
+#-----------------------------------------------------------------------------------------
+#----------------------------------- GAMEPLAY SCREEN -------------------------------------
+#-----------------------------------------------------------------------------------------
+@app.route("/<userID>/game/<gameID>", methods=["GET", "POST"])
+@login_required
+def game(userID, gameID):
+    game = db.session.query(Game).filter(Game.id == gameID).first()
+    user = db.session.query(User).filter(User.id == userID).first().username
+    return render_template("gameScreen.html", game=game, user=user)
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- LOG OUT ------------------------------------------
 #-----------------------------------------------------------------------------------------
