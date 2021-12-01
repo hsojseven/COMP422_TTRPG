@@ -7,6 +7,7 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <script src="{{url_for('static', filename='gameScreen.js')}}"></script>
+        <script src="https://unpkg.com/konva@8.3.0/konva.min.js"></script>
         <!--<title> In-Game: {{game.name}} </title>-->
     </head>
     <header>
@@ -58,7 +59,51 @@
             <button id="roll-D20" style="" class="btn btn-outline-success m-2" > Roll D20 </button>
           </div>
         </div>
+        <!-- Game Board -->
+        <div id="GameBoard" class="m-8 d-flex flex-column align-items-stretch flex-shrink-0 bg-grey border">
+          <div id="container"></div>
+        </div>
+        <script>
+          var width = window.innerWidth;
+          var height = window.innerHeight;
 
+          var stage = new Konva.Stage({
+          container: 'container',
+          width: width,
+          height: height,
+          });
+
+          var layer = new Konva.Layer();
+          var rectX = stage.width() / 2 - 50;
+          var rectY = stage.height() / 2 - 25;
+
+          var box = new Konva.Rect({
+          x: rectX,
+          y: rectY,
+          width: 100,
+          height: 50,
+          fill: '#00D2FF',
+          stroke: 'black',
+          strokeWidth: 4,
+          draggable: true,
+          });
+
+          // add bounds to the silly little box
+          box.on('dragmove', () => {
+            box.y(Math.max(box.y(), width));
+          });
+
+          // add cursor styling
+          box.on('mouseover', function () {
+            document.body.style.cursor = 'pointer';
+          });
+          box.on('mouseout', function () {
+          document.body.style.cursor = 'default';
+          });
+
+          layer.add(box);
+          stage.add(layer);
+        </script>
         
     </body>
 </html>
