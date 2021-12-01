@@ -15,8 +15,8 @@
             <a class="navbar-brand" style="font-weight:bold"> Characters </a>
           </div>
           <div class="d-flex">
-            <a style="" class="btn btn-outline-success mx-2 my-2 my-sm-0" type="home" href="{{url_for('home')}}"> Home </a>
-            <a style="" class="btn btn-outline-success my-2 my-sm-0" type="logout" href="{{url_for('get_logout')}}"> Logout </a>
+            <a style="" class="btn btn-outline-success mx-2 my-2 my-sm-0" type="submit" href="{{url_for('home')}}"> Home </a>
+            <a style="" class="btn btn-outline-success my-2 my-sm-0" type="submit" href="{{url_for('get_logout')}}"> Logout </a>
           </div>
         </nav>
         {############################# ERROR MESSAGES ################################}
@@ -52,7 +52,7 @@
                           <br>
                           Cha: {{char.charisma}}
                       </p>
-                    <a class="btn btn-primary" href="#"> Edit </a>
+                    <a id="editButton" class="btn btn-primary" style="color:white" data-target="#addCharacterModal" data-toggle="modal"> Edit </a>
                   </div>
               </div>
           </div>
@@ -64,7 +64,7 @@
       </div>
       {##############################  ADD CHARACTER MODAL ####################################}
       <div id="addCharacterModal" class="modal fade" role="dialog">
-        <div class="modal-dialog" style="padding-top:40px">
+        <div class="modal-dialog" style="padding-top:5px">
           <div class="modal-content">
             <div class="modal-header">
               <h4 class="modal-title" style="font-weight:bold">New Character</h4>
@@ -74,15 +74,17 @@
               <form method="POST">
                 {# CSRF Protection #}
                 {{ form.hidden_tag() }}
-                <p> {{form.name(class="form-control", placeholder="Character Name") }} </p>
-                <p> <div>{{form.strength(class="form-control", placeholder="Strength (between 0 and 20)")}}</div>  </p>  
-                <p> <div>{{form.dexterity(class="form-control", placeholder="Dexterity (between 0 and 20)")}}</div>  </p> 
-                <p> <div>{{form.constitution(class="form-control", placeholder="Constitution (between 0 and 20)")}}</div>  </p>
-                <p> <div>{{form.intelligence(class="form-control", placeholder="Intelligence (between 0 and 20)")}}</div>  </p> 
-                <p> <div>{{form.wisdom(class="form-control", placeholder="Wisdom (between 0 and 20)")}}</div>  </p>  
-                <p> <div>{{form.charisma(class="form-control", placeholder="Charisma (between 0 and 20)")}}</div>  </p>  
-                <p class="pt-3"> {{form.submit(class="btn btn-outline-success btn-md btn-block") }} </p>
-                <p> <a style="" class="btn btn-outline-success btn-md btn-block" type="Return" href="{{url_for('viewCharacters')}}"> Cancel </a>  </p>
+                <div class="form-floating mb-1">
+                  {{form.name(class="form-control", id="floatingInput", placeholder="Character Name", autocomplete="off")}}
+                  {{form.name.label(for="floatingInput")}}</div>
+                <div class="form-floating mb-1">{{form.strength(class="form-control", id="floatingInput", placeholder="Strength (between 0 and 20)", autocomplete="off")}} {{form.strength.label(for="floatingInput")}}</div>
+                <div class="form-floating mb-1">{{form.dexterity(class="form-control", id="floatingInput", placeholder="Dexterity (between 0 and 20)", autocomplete="off")}} {{form.dexterity.label(for="floatingInput")}}</div> 
+                <div class="form-floating mb-1">{{form.constitution(class="form-control", id="floatingInput", placeholder="Constitution (between 0 and 20)", autocomplete="off")}} {{form.constitution.label(for="floatingInput")}}</div>
+                <div class="form-floating mb-1">{{form.intelligence(class="form-control", id="floatingInput", placeholder="Intelligence (between 0 and 20)", autocomplete="off")}} {{form.intelligence.label(for="floatingInput")}}</div>
+                <div class="form-floating mb-1">{{form.wisdom(class="form-control", id="floatingInput", placeholder="Wisdom (between 0 and 20)", autocomplete="off")}} {{form.wisdom.label(for="floatingInput")}}</div>
+                <div class="form-floating mb-1">{{form.charisma(class="form-control", id="floatingInput", placeholder="Charisma (between 0 and 20)", autocomplete="off")}} {{form.charisma.label(for="floatingInput")}}</div>  
+                <p class="pt-2"> {{form.submit(class="btn btn-outline-success btn-md btn-block") }} </p>
+                <p> <a style="" class="btn btn-outline-success btn-md btn-block" type="submit" href="{{url_for('viewCharacters')}}"> Cancel </a>  </p>
               </form>
             </div>
           <div>

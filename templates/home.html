@@ -15,7 +15,7 @@
         </div>
         <div class="d-flex">
           <a style="" class="btn btn-outline-success mx-2 my-2 my-sm-0" type="submit" href="{{url_for('viewCharacters')}}"> Characters </a>
-          <a style="" class="btn btn-outline-success my-2 my-sm-0" type="logout" href="{{url_for('get_logout')}}"> Logout </a>
+          <a style="" class="btn btn-outline-success my-2 my-sm-0" type="submit" href="{{url_for('get_logout')}}"> Logout </a>
         </div>
       </nav>
     </header>
@@ -48,11 +48,11 @@
             <div class="modal-body">
               <form method="POST">
               {{ form.hidden_tag() }}
-              <p> {{form.name(class="form-control", placeholder="Game Name") }} </p>
+              <p> {{form.name(class="form-control", placeholder="Game Name", autocomplete="off") }} </p>
               <p> {{form.description(class="form-control", placeholder="Game Description") }} </p>
               <p class="pt-3"> {{form.submit(class="btn btn-outline-success btn-md btn-block") }} </p>
-              <p> <a style="" class="btn btn-outline-success btn-md btn-block" type="Home" href="{{url_for('home')}}"> Cancel </a>  </p>
-            </form>
+              <p> <a style="" class="btn btn-outline-success btn-md btn-block" type="submit" href="{{url_for('home')}}"> Cancel </a>  </p>
+              </form>
             </div>
           <div>
         </div>
