@@ -100,6 +100,12 @@ function openChatTab()
 
     chatTab.style.display = 'block';
     charEditTab.style.display = 'none';
+
+    const openChatBtn = document.getElementById("openChat-btn");
+    openChatBtn.style.backgroundColor = 'rgb(34, 105, 65)'
+    const openCharEditBtn = document.getElementById("openCharEdit-btn");
+    openCharEditBtn.style.backgroundColor = 'mediumseagreen'
+
 }
 
 //called when the character edit tab is selected 
@@ -112,4 +118,9 @@ function openCharacterTab()
 
     chatTab.style.display = 'none';
     charEditTab.style.display = 'block';
+
+    const openChatBtn = document.getElementById("openChat-btn");
+    openChatBtn.style.backgroundColor = 'mediumseagreen'
+    const openCharEditBtn = document.getElementById("openCharEdit-btn");
+    openCharEditBtn.style.backgroundColor = 'rgb(34, 105, 65)'
 }

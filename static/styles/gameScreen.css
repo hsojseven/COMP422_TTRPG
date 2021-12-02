@@ -4,38 +4,26 @@
     background-color: #f1f1f1;
 }
 
-
-
-#openChat-btn {
+.tabButton {
     background-color: inherit;
     box-sizing: border-box;
-    border: none;
+    border: solid grey;
     outline: none;
     cursor: pointer;
-    padding: 14px 16px;
+    padding: 14px 37px;
     transition: 0.3s;
-    float: left;
+    min-width: 116px;
+}
+
+#openChat-btn {
+    background-color: rgb(34, 105, 65);
 }
 
 #openCharEdit-btn {
-    background-color: inherit;
-    box-sizing: border-box;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
-    float: right;
+    background-color: mediumseagreen;
 }
 
 #sidebarHead button:hover {
-    background-color: mediumseagreen;
-}
-
-#sidebarHead button:focus {
-    background-color: mediumseagreen;
-}
-
-#sidebarHead button:active {
-    background-color: mediumseagreen;
+    background-color: rgb(34, 105, 65);
+    
 }
