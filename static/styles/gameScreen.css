@@ -4,7 +4,9 @@
     background-color: #f1f1f1;
 }
 
-.tabButton {
+
+
+#openChat-btn {
     background-color: inherit;
     box-sizing: border-box;
     border: none;
@@ -12,8 +14,28 @@
     cursor: pointer;
     padding: 14px 16px;
     transition: 0.3s;
+    float: left;
+}
+
+#openCharEdit-btn {
+    background-color: inherit;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    float: right;
 }
 
 #sidebarHead button:hover {
-    background-color: #ddd;
+    background-color: mediumseagreen;
+}
+
+#sidebarHead button:focus {
+    background-color: mediumseagreen;
+}
+
+#sidebarHead button:active {
+    background-color: mediumseagreen;
 }

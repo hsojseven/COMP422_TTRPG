@@ -28,7 +28,7 @@
 
         <div id="username" class="{{user}}" style="display:none;">
       </header>
-    <body>
+    <body style="overflow: hidden;">
         <div class="d-flex w-100">
         <div id="Sidebar" class="w-25 border">
           <!--Sidebar header-->
@@ -37,7 +37,7 @@
             <button id="openCharEdit-btn" class="tabButton"> Character </button>
           </div>
           <!--LIVE CHAT CONTAINER-->
-          <div id="livechat">
+          <div id="livechat" style="min-height: 29rem; max-height: 29rem">
             <!--LIST DIV-->
             <div id="msg-feed" class="panel-body border m-2 scrollarea" 
               style="overflow-y: scroll !important; height:250px !important; overflow-x: hidden;">
@@ -64,8 +64,7 @@
             </div>
           </div>
           <!--CHARACTER CONTAINER  hidden on default-->
-          <div id="characterEditor" style="display: none;">
-            <p> Character Editor </p>
+          <div id="characterEditor" style="display: none; min-height: 29.5rem; max-height: 29.5rem">
           </div>
         </div>
 
