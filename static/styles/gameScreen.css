@@ -1,0 +1,19 @@
+#sidebarHead {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+.tabButton {
+    background-color: inherit;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+#sidebarHead button:hover {
+    background-color: #ddd;
+}

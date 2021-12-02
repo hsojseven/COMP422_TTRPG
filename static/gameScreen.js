@@ -1,9 +1,21 @@
 //Matt Hay ~ Web ~ 11/17/21
 
+//called when the chat feed tab is selected
+
 // add a listener so that when the document loads . . .
 // new listeners can be attached to elements safely
 window.addEventListener("DOMContentLoaded", function() {
 	
+    //Get reference to chat tab button
+    const openChatBtn = document.getElementById("openChat-btn");
+    //add listener
+    openChatBtn.addEventListener("click", openChatTab);
+
+    //Get reference to character tab button
+    const openCharEditBtn = document.getElementById("openCharEdit-btn");
+    //add listener
+    openCharEditBtn.addEventListener("click", openCharacterTab);
+
 	// Get reference to send btn
 	const sendMsgBtn = document.getElementById("sendMsg-btn");
 	// Add event listener to the send btn
@@ -78,4 +90,26 @@ function rollD20()
     let roll = Math.floor(Math.random() * 20);
     let username = document.getElementById("username");
     addMsgToFeed(`${username.className} rolled a ${roll} with the D20 die`);
+}
+
+//called when the live chat tab is selected 
+function openChatTab()
+{
+    let chatTab = document.getElementById("livechat");
+    let charEditTab = document.getElementById("characterEditor");
+
+    chatTab.style.display = 'block';
+    charEditTab.style.display = 'none';
+}
+
+//called when the character edit tab is selected 
+function openCharacterTab()
+{
+    let chatTab = document.getElementById("livechat");
+    let charEditTab = document.getElementById("characterEditor");
+
+    console.log("HELLO");
+
+    chatTab.style.display = 'none';
+    charEditTab.style.display = 'block';
 }

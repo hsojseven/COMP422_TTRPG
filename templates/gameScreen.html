@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="/static/styles/gameScreen.css">
         <script src="{{url_for('static', filename='gameScreen.js')}}"></script>
         <script src="https://unpkg.com/konva@8.3.0/konva.min.js"></script>
         <!--<title> In-Game: {{game.name}} </title>-->
@@ -31,32 +32,40 @@
         <div class="d-flex w-100">
         <div id="Sidebar" class="w-25 border">
           <!--Sidebar header-->
-          <div class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
-            <span class="fs-5 fw-semibold"> Live Game Feed </span>
+          <div id="sidebarHead" class="d-flex align-items-center flex-shrink-0 p-2 link-dark text-decoration-none border-bottom">
+            <button id="openChat-btn" class="tabButton"> Game Feed </button>
+            <button id="openCharEdit-btn" class="tabButton"> Character </button>
           </div>
-          <!--LIST DIV-->
-          <div id="msg-feed" class="panel-body border m-2 scrollarea" 
-            style="overflow-y: scroll !important; height:250px !important; overflow-x: hidden;">
-              <!--LIST ITEMS GO HERE-->
-              <div class="left clearfix border-bottom my-1" style="">
-                <p class="mx-2" style="color:MediumSeaGreen; word-break: break-all;"> Your Adventure Awaits! </p>
-              </div>
+          <!--LIVE CHAT CONTAINER-->
+          <div id="livechat">
+            <!--LIST DIV-->
+            <div id="msg-feed" class="panel-body border m-2 scrollarea" 
+              style="overflow-y: scroll !important; height:250px !important; overflow-x: hidden;">
+                <!--LIST ITEMS GO HERE-->
+                <div class="left clearfix border-bottom my-1" style="">
+                  <p class="mx-2" style="color:MediumSeaGreen; word-break: break-all;"> Your Adventure Awaits! </p>
+                </div>
+            </div>
+
+            <div class="input-actions">
+              <form role="form">
+                <div class="form-group m-2">
+                  <textarea id="msg-box" class="form-control " style="resize:none; height:45px;" 
+                    placeholder="Enter message..."></textarea>
+                </div>
+                <div class="form-group m-2">
+                  <button id="sendMsg-btn" type="button" class="btn border"> Send </button>
+                </div>
+              </form>
+
+              <button id="roll-D6" style="" class="btn btn-outline-success m-2" > Roll D6 </button>
+              <button id="roll-D10" style="" class="btn btn-outline-success m-2" > Roll D10 </button>
+              <button id="roll-D20" style="" class="btn btn-outline-success m-2" > Roll D20 </button>
+            </div>
           </div>
-
-          <div class="input-actions">
-            <form role="form">
-              <div class="form-group m-2">
-                <textarea id="msg-box" class="form-control " style="resize:none; height:45px;" 
-                  placeholder="Enter message..."></textarea>
-              </div>
-              <div class="form-group m-2">
-                <button id="sendMsg-btn" type="button" class="btn border"> Send </button>
-              </div>
-            </form>
-
-            <button id="roll-D6" style="" class="btn btn-outline-success m-2" > Roll D6 </button>
-            <button id="roll-D10" style="" class="btn btn-outline-success m-2" > Roll D10 </button>
-            <button id="roll-D20" style="" class="btn btn-outline-success m-2" > Roll D20 </button>
+          <!--CHARACTER CONTAINER  hidden on default-->
+          <div id="characterEditor" style="display: none;">
+            <p> Character Editor </p>
           </div>
         </div>
 
