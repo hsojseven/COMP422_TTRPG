@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   </head>
 
   <header>
@@ -34,8 +37,13 @@
           {%endfor%}
       </div>
       {###########################################  BUTTON FOR THE MODAL  ##################################################}
-      <div style="position:absolute; bottom:20px; text-align:center; width:100%">
-        <p> <a class="btn btn-outline-success btn-md" data-target="#addGameModal" data-toggle="modal"> Add Game </a>  </p>
+      <div class="container-fluid" style="position:absolute; bottom:20px;">
+        <div style="text-align:center; width:100%">
+          <p> <button type="button" class="btn btn-outline-success btn-md" data-target="#addGameModal" data-toggle="modal"> Add Game </button>  </p>
+        </div>
+        <div style="text-align:center; width:100%">
+          <p> <button type="button" class="btn btn-outline-success btn-md" data-target="#joinGameModal" data-toggle="modal"> Join Game </button>  </p>
+        </div>
       </div>
       {###########################################  ADD GAME MODAL  ##################################################}
       <div id="addGameModal" class="modal fade" role="dialog">
@@ -54,13 +62,26 @@
               <p> <a style="" class="btn btn-outline-success btn-md btn-block" type="Home" href="{{url_for('home')}}"> Cancel </a>  </p>
             </form>
             </div>
-          <div>
+          </div>
         </div>
       </div>
-
-      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
+      <div id="joinGameModal" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="padding-top:40px">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" style="font-weight:bold">Join Game</h4>
+              <a class="btn close btn-sm" data-dismiss="modal" data-toggle="modal" aria-hidden="true">&times; </a>
+            </div>
+            <div class="modal-body">
+              <form method="POST">
+              {{ joinForm.hidden_tag() }}
+              <p> {{joinForm.game(class="form-control", placeholder="Game ID") }} </p>
+              <p class="pt-3"> {{joinForm.submitJoin(class="btn btn-outline-success btn-md btn-block") }} </p>
+              <p> <a style="" class="btn btn-outline-success btn-md btn-block" type="Home" href="{{url_for('home')}}"> Cancel </a>  </p>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </body>
 </html>

@@ -120,28 +120,30 @@
         };
       }
 
+      var imageObj = new Image();
+      imageObj.src = '/static/battle_map.jpg'
+      console.log("async");
+
       let board = document.getElementById('GameBoard')
       const stage = new Konva.Stage({
         container: 'GameBoard',
-        width: board.offsetWidth,
-        height: window.innerHeight,
+        width: imageObj.naturalWidth,
+        height: imageObj.naturalHeight,
       });
 
       const layer = new Konva.Layer();
       stage.add(layer);
 
-      var imageObj = new Image();
-      imageObj.src = 'battle_map.jpg'
-
       const background = new Konva.Rect({
         x: 0,
         y: 0,
-        width: stage.width(),
-        height: stage.height(),
+        width: imageObj.naturalWidth,
+        height: imageObj.naturalHeight,
         fillPatternImage: imageObj,
         draggable: false
       });
       layer.add(background);
+      
 
       const shape1 = new Konva.Rect({
         x: stage.width() / 2 - 60,
