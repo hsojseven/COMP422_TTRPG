@@ -15,6 +15,10 @@ class GameForm(FlaskForm):
   description = TextAreaField(validators=[InputRequired()])
   submit = SubmitField("Add")
 
+class JoinForm(FlaskForm):
+  game = IntegerField(validators=[InputRequired()])
+  submitJoin = SubmitField("Join")
+
 class RegisterForm(FlaskForm):
   username = StringField(validators=[InputRequired()])
   password = PasswordField(validators=[InputRequired(), Length(min=8, max=256)])

@@ -1,10 +1,11 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash
-from myforms import GameForm, LoginForm, RegisterForm, CharacterForm
+from myforms import GameForm, LoginForm, RegisterForm, CharacterForm, JoinForm
 from flask_login import UserMixin, LoginManager, login_required
 from flask_login import login_user, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from hashing import Hasher
+from flask import jsonify
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(32)
@@ -61,6 +62,7 @@ class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode, nullable=False)
     description = db.Column(db.Unicode, nullable=False)
+    board = db.Column(db.Unicode, nullable=True)
     gamers = db.relationship('Player', backref='Gamers')
     #msgHistory = db.Column(db.Unicode, nullable=True)
 #-----------------------------------------------------------------------------------------
@@ -178,13 +180,14 @@ def post_login():
 @login_required
 def home():
     newGameForm = GameForm()
+    joinForm = JoinForm()
     gameList=db.session.query(Game, Player).join(Game, Game.id==Player.gameID).filter(Player.userID == current_user.id).all()
     
     if request.method == 'GET':
-        return render_template("home.html", gameList=gameList, user=current_user, form=newGameForm)
+        return render_template("home.html", gameList=gameList, user=current_user, form=newGameForm, joinForm=joinForm)
     
     if request.method == "POST":
-        if newGameForm.validate():
+        if newGameForm.submit.data and newGameForm.validate():
             game = Game(name=newGameForm.name.data, description=newGameForm.description.data)
             db.session.add(game)
             db.session.commit()
@@ -195,10 +198,15 @@ def home():
             db.session.commit()
 
             return redirect(url_for("home"))
+
+        elif joinForm.submitJoin.data and joinForm.validate():
+            player = Player(userID=current_user.id, game=joinForm.game.data, role=0)
+            return redirect(url_for("home"))
         else:
             for field,error in newGameForm.errors.items():
                 flash(f"{field}: {error}")
-            return redirect(url_for("home"))
+            return redirect(url_for("addGame"))
+        
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- CHARACTER ROUTE ----------------------------------
 #-----------------------------------------------------------------------------------------
@@ -243,3 +251,16 @@ def get_logout():
     logout_user()
     flash('You have been logged out')
     return redirect(url_for('get_login'))
+
+
+# API #
+@app.route("/api/getboard/<gameID>/")
+@login_required
+def get_board(gameID):
+    gameBoard = db.session.query(Game).filter(Game.id == gameID).first()
+    return gameBoard.board
+
+@app.route("/api/addboard/<gameID>/")
+def set_board(gameID):
+    gameBoard = db.session.query(Game).filter(Game.id == gameID).first()
+    return jsonify(gameBoard.board)

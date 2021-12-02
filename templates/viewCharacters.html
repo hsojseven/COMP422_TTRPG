@@ -34,29 +34,29 @@
     <body>
       {############################  VIEW MAIN CONTENT ###############################}
       <div class="row mx-1 col d-flex justify-content-center">
-          {% for char in charList %}
+        {% for char in charList %}
           <div class="col-md-3">
-              <div class="card my-2">
-                  <div class="card-body">
-                    <h5 class="card-title"> {{char.name}} </h5>
-                    <p class="card-text"> 
-                          Str: {{char.strength}}
-                          <br>
-                          Dex: {{char.dexterity}}
-                          <br>
-                          Con: {{char.constitution}}
-                          <br>
-                          Int: {{char.intelligence}}
-                          <br>
-                          Wis: {{char.wisdom}}
-                          <br>
-                          Cha: {{char.charisma}}
-                      </p>
-                    <a id="editButton" class="btn btn-primary" style="color:white" data-target="#addCharacterModal" data-toggle="modal"> Edit </a>
-                  </div>
+            <div class="card my-2">
+              <div class="card-body">
+                <h5 class="card-title"> {{char.name}} </h5>
+                  <p class="card-text"> 
+                    Str: {{char.strength}}
+                    <br>
+                    Dex: {{char.dexterity}}
+                    <br>
+                    Con: {{char.constitution}}
+                    <br>
+                    Int: {{char.intelligence}}
+                    <br>
+                    Wis: {{char.wisdom}}
+                    <br>
+                    Cha: {{char.charisma}}
+                  </p>
+                  <a id="editButton" class="btn btn-primary" style="color:white" data-target="#editCharacterModal" data-toggle="modal"> Edit </a>
               </div>
+            </div>
           </div>
-          {%endfor%}
+        {%endfor%}
       </div>
       {#############################  BUTTON FOR THE MODAL  ###################################}
       <div style="position:absolute; bottom:20px; text-align:center; width:100%">
@@ -64,7 +64,7 @@
       </div>
       {##############################  ADD CHARACTER MODAL ####################################}
       <div id="addCharacterModal" class="modal fade" role="dialog">
-        <div class="modal-dialog" style="padding-top:5px">
+        <div class="modal-dialog modal-dialog-scrollable" style="padding-top:5px">
           <div class="modal-content">
             <div class="modal-header">
               <h4 class="modal-title" style="font-weight:bold">New Character</h4>
@@ -76,7 +76,8 @@
                 {{ form.hidden_tag() }}
                 <div class="form-floating mb-1">
                   {{form.name(class="form-control", id="floatingInput", placeholder="Character Name", autocomplete="off")}}
-                  {{form.name.label(for="floatingInput")}}</div>
+                  {{form.name.label(for="floatingInput")}}
+                </div>
                 <div class="form-floating mb-1">{{form.strength(class="form-control", id="floatingInput", placeholder="Strength (between 0 and 20)", autocomplete="off")}} {{form.strength.label(for="floatingInput")}}</div>
                 <div class="form-floating mb-1">{{form.dexterity(class="form-control", id="floatingInput", placeholder="Dexterity (between 0 and 20)", autocomplete="off")}} {{form.dexterity.label(for="floatingInput")}}</div> 
                 <div class="form-floating mb-1">{{form.constitution(class="form-control", id="floatingInput", placeholder="Constitution (between 0 and 20)", autocomplete="off")}} {{form.constitution.label(for="floatingInput")}}</div>
@@ -87,7 +88,36 @@
                 <p> <a style="" class="btn btn-outline-success btn-md btn-block" type="submit" href="{{url_for('viewCharacters')}}"> Cancel </a>  </p>
               </form>
             </div>
-          <div>
+          </div>
+        </div>
+      </div>
+      {##############################  EDIT CHARACTER MODAL ####################################}
+      <div id="editCharacterModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-scrollable" style="padding-top:5px">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" style="font-weight:bold">Edit Character</h4>
+              <a class="btn close btn-sm" data-dismiss="modal" data-toggle="modal" aria-hidden="true">&times; </a>
+            </div>
+            <div class="modal-body">
+              <form method="POST">
+                {# CSRF Protection #}
+                {{ form.hidden_tag() }}
+                <div class="form-floating mb-1">
+                  {{form.name(class="form-control", id="floatingInput", placeholder="Character Name", autocomplete="off")}}
+                  {{form.name.label(for="floatingInput")}}
+                </div>
+                <div class="form-floating mb-1">{{form.strength(class="form-control", id="floatingInput", placeholder="Strength (between 0 and 20)", autocomplete="off")}} {{form.strength.label(for="floatingInput")}}</div>
+                <div class="form-floating mb-1">{{form.dexterity(class="form-control", id="floatingInput", placeholder="Dexterity (between 0 and 20)", autocomplete="off")}} {{form.dexterity.label(for="floatingInput")}}</div> 
+                <div class="form-floating mb-1">{{form.constitution(class="form-control", id="floatingInput", placeholder="Constitution (between 0 and 20)", autocomplete="off")}} {{form.constitution.label(for="floatingInput")}}</div>
+                <div class="form-floating mb-1">{{form.intelligence(class="form-control", id="floatingInput", placeholder="Intelligence (between 0 and 20)", autocomplete="off")}} {{form.intelligence.label(for="floatingInput")}}</div>
+                <div class="form-floating mb-1">{{form.wisdom(class="form-control", id="floatingInput", placeholder="Wisdom (between 0 and 20)", autocomplete="off")}} {{form.wisdom.label(for="floatingInput")}}</div>
+                <div class="form-floating mb-1">{{form.charisma(class="form-control", id="floatingInput", placeholder="Charisma (between 0 and 20)", autocomplete="off")}} {{form.charisma.label(for="floatingInput")}}</div>  
+                <p class="pt-2"> {{form.submit(class="btn btn-outline-success btn-md btn-block") }} </p>
+                <p> <a style="" class="btn btn-outline-success btn-md btn-block" type="submit" href="{{url_for('viewCharacters')}}"> Cancel </a>  </p>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
 
