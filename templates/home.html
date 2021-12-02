@@ -28,7 +28,10 @@
           <div class="col-md-3">
               <div class="card my-2">
                   <div class="card-body">
-                    <h5 class="card-title"> {{game.name}} </h5>
+                    <h5 class="card-title"> {{game.name}} 
+                      <a style="float:right; font-size:small" class="btn-close btn-outline-danger btn-sm" type="submit" 
+                        href="{{url_for('remove_game', ngame=game.name)}}"> Delete </a>
+                    </h5>
                     <p class="card-text"> {{game.description}} </p>
                     <a class="btn btn-primary" href="/{{user.id}}/game/{{game.id}}"> Join Game </a>
                   </div>
@@ -36,7 +39,7 @@
           </div>
           {%endfor%}
       </div>
-      {###########################################  BUTTON FOR THE MODAL  ##################################################}
+      {#########################################  BUTTONS FOR THE MODALS  ############################################}
       <div class="container-fluid" style="position:absolute; bottom:20px;">
         <div style="text-align:center; width:100%">
           <p> <button type="button" class="btn btn-outline-success btn-md" data-target="#addGameModal" data-toggle="modal"> Add Game </button>  </p>
@@ -65,6 +68,7 @@
           </div>
         </div>
       </div>
+      {###########################################  JOIN GAME MODAL  ##################################################}
       <div id="joinGameModal" class="modal fade" role="dialog">
         <div class="modal-dialog" style="padding-top:40px">
           <div class="modal-content">
@@ -77,11 +81,16 @@
               {{ joinForm.hidden_tag() }}
               <p> {{joinForm.game(class="form-control", placeholder="Game ID") }} </p>
               <p class="pt-3"> {{joinForm.submitJoin(class="btn btn-outline-success btn-md btn-block") }} </p>
-              <p> <a style="" class="btn btn-outline-success btn-md btn-block" type="Home" href="{{url_for('home')}}"> Cancel </a>  </p>
+              <p> <a style="" class="btn btn-outline-success btn-md btn-block" type="submit" href="{{url_for('home')}}"> Cancel </a>  </p>
             </form>
             </div>
           </div>
         </div>
       </div>
+
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
     </body>
 </html>

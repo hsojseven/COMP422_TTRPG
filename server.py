@@ -80,7 +80,7 @@ class Character(db.Model):
     wisdom = db.Column(db.Integer, nullable=False)
     charisma = db.Column(db.Integer, nullable=False)
 #-----------------------------------------------------------------------------------------
-#----------------------------------- Player Table ----------------------------------------
+#----------------------------------- PLAYER TABLE ----------------------------------------
 #-----------------------------------------------------------------------------------------
 class Player(db.Model):
     __tablename__='Players'
@@ -251,7 +251,20 @@ def get_logout():
     logout_user()
     flash('You have been logged out')
     return redirect(url_for('get_login'))
-
+#-----------------------------------------------------------------------------------------
+#-------------------------------------- REMOVE GAME --------------------------------------
+#-----------------------------------------------------------------------------------------
+@app.get('/home/<ngame>')
+@login_required
+def remove_game(ngame):
+    game_to_rmv = Game.query.filter_by(name = ngame).first()
+    players_to_rmv = Game.query.filter_by(name = ngame).first().gamers
+    
+    for item in players_to_rmv:
+        db.session.delete(item)
+    db.session.delete(game_to_rmv)
+    db.session.commit()
+    return redirect(url_for('home'))
 
 # API #
 @app.route("/api/getboard/<gameID>/")
