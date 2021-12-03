@@ -41,47 +41,51 @@
     {#########################################  BUTTONS FOR THE MODALS  ############################################}
     <div class="container-fluid">
       <div style="text-align:center; width:100%; padding-top:3rem">
-        <p> <button class="btn btn-outline-success btn-md" data-target="#addGameModal" data-toggle="modal"> Add Game </button>  </p>
+        <p><button type="button" class="btn btn-outline-success btn-md" data-bs-toggle="modal" data-bs-target="#addGameModal">
+          Add Game
+        </button></p>
       </div>
       <div style="text-align:center; width:100%">
-        <p> <button class="btn btn-outline-success btn-md" data-target="#joinGameModal" data-toggle="modal"> Join Game </button>  </p>
+        <p><button type="button" class="btn btn-outline-success btn-md" data-bs-toggle="modal" data-bs-target="#joinGameModal">
+          Join Game
+        </button></p>
       </div>
     </div>
     {###########################################  ADD GAME MODAL  ##################################################}
-    <div id="addGameModal" class="modal fade" role="dialog">
-      <div class="modal-dialog" style="padding-top:40px">
+    <div class="modal fade" id="addGameModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable" style="padding-top:4rem">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title" style="font-weight:bold">New Game</h4>
-            <a class="btn close btn-sm" data-dismiss="modal" data-toggle="modal" aria-hidden="true">&times; </a>
+            <h5 class="modal-title" id="staticBackdropLabel">New Game</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form method="POST">
-            {{ form.hidden_tag() }}
-            <p> {{form.name(class="form-control", placeholder="Game Name", autocomplete="off") }} </p>
-            <p> {{form.description(class="form-control", placeholder="Game Description") }} </p>
-            <p class="pt-3"> {{form.submit(class="btn btn-outline-success btn-md btn-block") }} </p>
-            <p> <a style="" class="btn btn-outline-success btn-md btn-block" href="{{url_for('home')}}"> Cancel </a>  </p>
-            </form>
+              {{ form.hidden_tag() }}
+              <p> {{form.name(class="form-control", placeholder="Game Name", autocomplete="off") }} </p>
+              <p> {{form.description(class="form-control", placeholder="Game Description") }} </p>
+              <p class="pt-3"> {{form.submit(class="btn btn-outline-success btn-md w-100") }} </p>
+              <p> <a style="" class="btn btn-outline-success btn-md w-100" href="{{url_for('home')}}"> Cancel </a>  </p>
+              </form>
           </div>
         </div>
       </div>
     </div>
     {###########################################  JOIN GAME MODAL  ##################################################}
-    <div id="joinGameModal" class="modal fade" role="dialog">
-      <div class="modal-dialog" style="padding-top:4rem">
+    <div class="modal fade" id="joinGameModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable" style="padding-top:4rem">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title" style="font-weight:bold">Join Game</h4>
-            <a class="btn close btn-sm" data-dismiss="modal" data-toggle="modal" aria-hidden="true">&times; </a>
+            <h5 class="modal-title" id="staticBackdropLabel">Join Game</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form method="POST">
-            {{ joinForm.hidden_tag() }}
-            <p> {{joinForm.game(class="form-control", placeholder="Game ID") }} </p>
-            <p class="pt-3"> {{joinForm.submitJoin(class="btn btn-outline-success btn-md btn-block") }} </p>
-            <p> <a style="" class="btn btn-outline-success btn-md btn-block" href="{{url_for('home')}}"> Cancel </a>  </p>
-          </form>
+              {{ joinForm.hidden_tag() }}
+              <p> {{joinForm.game(class="form-control", placeholder="Game ID") }} </p>
+              <p class="pt-3"> {{joinForm.submitJoin(class="btn btn-outline-success btn-md w-100") }} </p>
+              <p> <a style="" class="btn btn-outline-success btn-md w-100" href="{{url_for('home')}}"> Cancel </a>  </p>
+            </form>
           </div>
         </div>
       </div>
