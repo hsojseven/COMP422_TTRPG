@@ -5,10 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
   </head>
 
   <body>
@@ -18,8 +16,8 @@
           <a class="navbar-brand" style="font-weight:bold"> Characters </a>
         </div>
         <div class="d-flex">
-          <a class="btn btn-outline-success mx-2 my-2 my-sm-0" href="{{url_for('home')}}"> Home </a>
-          <a class="btn btn-outline-success my-2 my-sm-0" href="{{url_for('get_logout')}}"> Logout </a>
+          <a class="btn btn-outline-success my-2 my-sm-0" href="{{url_for('home')}}"> Home </a>
+          <a class="btn btn-outline-success my-2 mx-3 my-sm-0" href="{{url_for('get_logout')}}"> Logout </a>
         </div>
       </nav>
       {############################# ERROR MESSAGES ################################}
@@ -42,7 +40,7 @@
             <div class="card-body">
               <h5 class="card-title"> {{char.name}} 
                 <a style="float:right; font-size:small" class="btn-close btn-outline-danger btn-sm" 
-                  href="{{url_for('remove_character', characterID=char.id)}}"> Delete </a>
+                  href="{{url_for('remove_character', characterID=char.id)}}"> </a>
               </h5>
                 <p class="card-text"> 
                   Str: {{char.strength}}
@@ -57,23 +55,29 @@
                   <br>
                   Cha: {{char.charisma}}
                 </p>
-                <a id="editButton" class="btn btn-primary" style="color:white" data-target="#editCharacterModal" data-toggle="modal"> Edit </a>
+                <button id="editButton" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editCharacterModal">
+                  Edit
+                </button>
             </div>
           </div>
         </div>
       {%endfor%}
     </div>
-    {#############################  BUTTON FOR THE MODAL  ###################################}
-    <div style="text-align:center; width:100%; padding-top:30px">
-      <p> <a class="btn btn-outline-success btn-md" data-target="#addCharacterModal" data-toggle="modal"> Add Character </a>  </p>
+    {################################## BUTTON TO TRIGGER ADD MODAL ######################################}
+    <div class="absolute-bottom">
+      <div class="d-flex justify-content-center">
+        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#addCharacterModal">
+          Add Character
+        </button>
+      </div>
     </div>
-    {##############################  ADD CHARACTER MODAL ####################################}
-    <div id="addCharacterModal" class="modal fade" role="dialog">
-      <div class="modal-dialog modal-dialog-scrollable" style="padding-top:5px">
+    {###################################### ADD CHARACTER MODAL #########################################}
+    <div class="modal fade" id="addCharacterModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title" style="font-weight:bold">New Character</h4>
-            <a class="btn close btn-sm" data-dismiss="modal" data-toggle="modal" aria-hidden="true">&times; </a>
+            <h5 class="modal-title" id="staticBackdropLabel">New Character</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form method="POST">
@@ -89,20 +93,22 @@
               <div class="form-floating mb-1">{{form.intelligence(class="form-control", id="floatingInput", placeholder="Intelligence (between 0 and 20)", autocomplete="off")}} {{form.intelligence.label(for="floatingInput")}}</div>
               <div class="form-floating mb-1">{{form.wisdom(class="form-control", id="floatingInput", placeholder="Wisdom (between 0 and 20)", autocomplete="off")}} {{form.wisdom.label(for="floatingInput")}}</div>
               <div class="form-floating mb-1">{{form.charisma(class="form-control", id="floatingInput", placeholder="Charisma (between 0 and 20)", autocomplete="off")}} {{form.charisma.label(for="floatingInput")}}</div>  
-              <p class="pt-2"> {{form.submit(class="btn btn-outline-success btn-md btn-block") }} </p>
-              <p> <a class="btn btn-outline-success btn-md btn-block" href="{{url_for('viewCharacters')}}"> Cancel </a>  </p>
+              <div class="d-grid gap-2">
+                <div class="form">{{form.submit(class="btn btn-outline-success btn-md w-100", tabindex="-1") }}</div>
+                <a href="{{url_for('viewCharacters')}}" class="btn btn-outline-success btn-md" tabindex="-1" role="button">Cancel</a>
+              </div>
             </form>
           </div>
         </div>
       </div>
     </div>
-    {##############################  EDIT CHARACTER MODAL ####################################}
-    <div id="editCharacterModal" class="modal fade" role="dialog">
-      <div class="modal-dialog modal-dialog-scrollable" style="padding-top:5px">
+    {###################################### EDIT CHARACTER MODAL ##########################################}
+    <div class="modal fade" id="editCharacterModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title" style="font-weight:bold">Edit Character</h4>
-            <a class="btn close btn-sm" data-dismiss="modal" data-toggle="modal" aria-hidden="true">&times; </a>
+            <h5 class="modal-title" id="staticBackdropLabel">Edit Character</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form method="POST">
@@ -118,17 +124,15 @@
               <div class="form-floating mb-1">{{form.intelligence(class="form-control", id="floatingInput", placeholder="Intelligence (between 0 and 20)", autocomplete="off")}} {{form.intelligence.label(for="floatingInput")}}</div>
               <div class="form-floating mb-1">{{form.wisdom(class="form-control", id="floatingInput", placeholder="Wisdom (between 0 and 20)", autocomplete="off")}} {{form.wisdom.label(for="floatingInput")}}</div>
               <div class="form-floating mb-1">{{form.charisma(class="form-control", id="floatingInput", placeholder="Charisma (between 0 and 20)", autocomplete="off")}} {{form.charisma.label(for="floatingInput")}}</div>  
-              <p class="pt-2"> {{form.submit(class="btn btn-outline-success btn-md btn-block") }} </p>
-              <p> <a class="btn btn-outline-success btn-md btn-block" type="button" href="{{url_for('viewCharacters')}}"> Cancel </a>  </p>
+              <div class="d-grid gap-2">
+                <div class="form">{{form.submit(class="btn btn-outline-success btn-md w-100", tabindex="-1") }}</div>
+                <a href="{{url_for('viewCharacters')}}" class="btn btn-outline-success btn-md" tabindex="-1" role="button">Cancel</a>
+              </div>
             </form>
           </div>
         </div>
       </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
   </body>
 </html>
