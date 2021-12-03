@@ -254,17 +254,29 @@ def get_logout():
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- REMOVE GAME --------------------------------------
 #-----------------------------------------------------------------------------------------
-@app.get('/home/<ngame>')
+@app.get('/home/<gameID>')
 @login_required
-def remove_game(ngame):
-    game_to_rmv = Game.query.filter_by(name = ngame).first()
-    players_to_rmv = Game.query.filter_by(name = ngame).first().gamers
+def remove_game(gameID):
+    game_to_rmv = Game.query.filter_by(id = gameID).first()
+    players_to_rmv = Game.query.filter_by(id = gameID).first().gamers
     
     for item in players_to_rmv:
         db.session.delete(item)
+        
     db.session.delete(game_to_rmv)
     db.session.commit()
     return redirect(url_for('home'))
+#-----------------------------------------------------------------------------------------
+#-------------------------------------- REMOVE CHARACTER --------------------------------------
+#-----------------------------------------------------------------------------------------
+@app.get('/viewCharacters/<characterID>')
+@login_required
+def remove_character(characterID):
+    char_to_rmv = Character.query.filter_by(id = characterID).first()
+    db.session.delete(char_to_rmv)
+    db.session.commit()
+    return redirect(url_for('viewCharacters'))
+
 
 # API #
 @app.route("/api/getboard/<gameID>/")
