@@ -3,7 +3,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width"> <!--, initial-scale=1, shrink-to-fit=no-->
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="/static/styles/gameScreen.css">
@@ -32,7 +32,7 @@
         <div class="d-flex w-100">
         <div id="Sidebar" class="w-25 border">
           <!--Sidebar header-->
-          <div id="sidebarHead" class="d-flex align-items-center flex-shrink-0 p-2 link-dark text-decoration-none border-bottom">
+          <div id="sidebarHead" class="d-flex justify-content-center"> <!--d-flex align-items-center flex-shrink-0 p-2 link-dark text-decoration-none border-bottom-->
             <button id="openChat-btn" class="tabButton"> Game Feed </button>
             <button id="openCharEdit-btn" class="tabButton"> Character </button>
           </div>
@@ -64,13 +64,25 @@
             </div>
           </div>
           <!--CHARACTER CONTAINER  hidden on default-->
-          <div id="characterEditor" style="display: none; min-height: 29.5rem; max-height: 29.5rem">
+          <div id="characterEditor" style="overflow-y: scroll !important; height:29.5rem !important; display: none;" align="center"> <!-- style="display: none; min-height: 29.5rem; max-height: 29.5rem" align="center"-->
             <form action="/action_page.php">
               <h4 class="d-flex justify-content-center m-2"> Name </h4>
-              <label for="characterHP" >Health:</label>
-              <input type="number" id="characterHP" name="health"><br><br>
-              <label for="characterStrength">Strength:</label>
-              <input type="number" id="characterStrength" name="strength"><br><br>
+              <label for="health" style="font-size: 16px">Health:</label>
+              <input type="number" id="health" name="health" style="max-width: 40px; font-size: 16px"><br><br>
+              <label for="level">Level:</label>
+              <input type="number" id="level" name="level" size="2"><br><br>
+              <label for="strength">Strength:</label>
+              <input type="number" id="strength" name="strength" size="2"><br><br>
+              <label for="dexterity">Dexterity:</label>
+              <input type="number" id="dexterity" name="dexterity" size="2"><br><br>
+              <label for="constitution">Constitution:</label>
+              <input type="number" id="constitution" name="constitution" size="2"><br><br>
+              <label for="intelligence">Intelligence:</label>
+              <input type="number" id="intelligence" name="intelligence" maxlength="2" size="2"><br><br>
+              <label for="wisdom">Wisdom:</label>
+              <input type="number" id="wisdom" name="wisdom" size="2"><br><br>
+              <label for="charisma">Charisma:</label>
+              <input type="number" id="charisma" name="charisma" size="2"><br><br>
               <input type="submit" value="Save">
             </form>
           </div>
