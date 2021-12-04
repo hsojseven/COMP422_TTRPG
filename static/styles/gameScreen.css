@@ -15,6 +15,12 @@
     min-width: 116px;
 }
 
+.inputBox {
+    max-width: 120px; 
+    font-size: 16px;
+    border: 1px solid #ccc;
+}
+
 #openChat-btn {
     background-color: rgb(34, 105, 65);
 }
