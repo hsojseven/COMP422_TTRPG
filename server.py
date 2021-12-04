@@ -131,6 +131,7 @@ def post_register():
             user = User(username=form.username.data, password=form.password.data)
             db.session.add(user)
             db.session.commit()
+            flash('Thank you for Registering! Please log in.')
             return redirect(url_for('get_login'))
         else: # if the username already exists
             # flash a warning message and redirect to get registration form

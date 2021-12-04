@@ -20,9 +20,18 @@
           <a class="btn btn-outline-success my-2 mx-3 my-sm-0" href="{{url_for('get_logout')}}"> Logout </a>
         </div>
       </nav>
+    {########################################## ERROR MESSAGES #################################################}
+      <div class="container">
+        {% for message in get_flashed_messages() %}
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
     </header>
     {############################################################################################################}
-    {#######################################  VIEW MAIN CONTENT #################################################}
+    {#########################################  VIEW MAIN CONTENT ###############################################}
     <main style="flex-grow:1;">
       <div class="row mx-1 col d-flex justify-content-center">
         {% for game, player in gameList %}
