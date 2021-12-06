@@ -183,9 +183,10 @@ def home():
     newGameForm = GameForm()
     joinForm = JoinForm()
     gameList=db.session.query(Game, Player).join(Game, Game.id==Player.gameID).filter(Player.userID == current_user.id).all()
+    characterList=db.session.query(Character).filter(Character.userID == current_user.id).all()
     
     if request.method == 'GET':
-        return render_template("home.html", gameList=gameList, user=current_user, form=newGameForm, joinForm=joinForm)
+        return render_template("home.html", gameList=gameList, user=current_user, form=newGameForm, joinForm=joinForm, charList=characterList)
     
     if request.method == "POST":
         if newGameForm.submit.data and newGameForm.validate():

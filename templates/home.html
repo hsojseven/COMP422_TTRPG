@@ -43,7 +43,29 @@
                     href="{{url_for('remove_game', gameID=game.id)}}"> </a>
                 </h5>
                 <p class="card-text"> {{game.description}} </p>
-                <a class="btn btn-primary" href="/{{user.id}}/game/{{game.id}}"> Join Game </a>
+                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#chooseCharacterModal""> Join Game </a>
+              </div>
+            </div>
+          </div>
+          {##########################################  CHOOSE CHARACTER MODAL  ################################################}
+          <div class="modal fade" id="chooseCharacterModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable" style="padding-top:4rem">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="staticBackdropLabel">Choose Character</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form method="POST">
+                    <select class="form-select" aria-label="Default select example">
+                      <option selected>Open this menu*</option>
+                      {% for char in charList %}
+                      <option value="{{char.id}}">{{char.name}}</option>
+                      {%endfor%}
+                    </select>
+                    <p class="pt-4"> <a style="" class="btn btn-outline-success btn-md w-100" href="/{{user.id}}/game/{{game.id}}"> Select </a>  </p>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
@@ -103,5 +125,6 @@
         </div>
       </div>
     </div>
+    
   </body>
 </html>
