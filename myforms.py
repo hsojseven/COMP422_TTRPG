@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
+from wtforms.fields.core import SelectField
 from wtforms.fields.html5 import IntegerField
 from wtforms.fields.simple import TextAreaField
 from wtforms.validators import InputRequired, EqualTo, Length, NumberRange
@@ -15,7 +16,7 @@ class GameForm(FlaskForm):
   description = TextAreaField(validators=[InputRequired()])
   submit = SubmitField("Add")
 
-class JoinForm(FlaskForm):
+class JoinWithIDForm(FlaskForm):
   game = IntegerField(validators=[InputRequired()])
   submitJoin = SubmitField("Join")
 
@@ -35,3 +36,8 @@ class CharacterForm(FlaskForm):
   wisdom = IntegerField("Wisdom (between 0 and 20)", validators=[InputRequired(), NumberRange(min=0, max=20, message=integer_message)])
   charisma = IntegerField("Charisma (between 0 and 20)", validators=[InputRequired(), NumberRange(min=0, max=20, message=integer_message)])
   submit = SubmitField("Add")
+  
+class JoinGameForm(FlaskForm):
+  characters = SelectField("Choose Character", choices=[], validators=[InputRequired()])
+  games = SelectField("Choose Game", choices=[], validators=[InputRequired()])
+  submit = SubmitField("Join")

@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash
-from myforms import GameForm, LoginForm, RegisterForm, CharacterForm, JoinForm
+from myforms import GameForm, LoginForm, RegisterForm, CharacterForm, JoinWithIDForm, JoinGameForm
 from flask_login import UserMixin, LoginManager, login_required
 from flask_login import login_user, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
@@ -181,12 +181,18 @@ def post_login():
 @login_required
 def home():
     newGameForm = GameForm()
-    joinForm = JoinForm()
+    joinWithIDForm = JoinWithIDForm()
+    joinGameForm = JoinGameForm()
     gameList=db.session.query(Game, Player).join(Game, Game.id==Player.gameID).filter(Player.userID == current_user.id).all()
-    characterList=db.session.query(Character).filter(Character.userID == current_user.id).all()
+    
+    joinGameForm.characters.choices = [
+        (items.id, items.name) for items in Character.query.all()]
+    joinGameForm.games.choices=[
+        (items.id, items.name) for items in Game.query.all()]
     
     if request.method == 'GET':
-        return render_template("home.html", gameList=gameList, user=current_user, form=newGameForm, joinForm=joinForm, charList=characterList)
+        return render_template("home.html", gameList=gameList, user=current_user, form=newGameForm, 
+                               joinWithIDForm=joinWithIDForm, joinGameForm=joinGameForm)
     
     if request.method == "POST":
         if newGameForm.submit.data and newGameForm.validate():
@@ -200,9 +206,14 @@ def home():
             db.session.commit()
 
             return redirect(url_for("home"))
-
-        elif joinForm.submitJoin.data and joinForm.validate():
-            player = Player(userID=current_user.id, game=joinForm.game.data, role=0)
+        
+        elif joinGameForm.validate():
+            characterID = joinGameForm.characters.data
+            gameID = joinGameForm.games.data
+            return redirect(url_for("game", gameID=gameID, characterID=characterID))
+            
+        elif joinWithIDForm.submitJoin.data and joinWithIDForm.validate():
+            player = Player(userID=current_user.id, game=joinWithIDForm.game.data, role=0)
             return redirect(url_for("home"))
         else:
             for field,error in newGameForm.errors.items():
@@ -238,12 +249,13 @@ def viewCharacters():
 #-----------------------------------------------------------------------------------------
 #----------------------------------- GAMEPLAY SCREEN -------------------------------------
 #-----------------------------------------------------------------------------------------
-@app.route("/<userID>/game/<gameID>", methods=["GET", "POST"])
+@app.route("/game/<gameID>/<characterID>/", methods=["GET", "POST"])
 @login_required
-def game(userID, gameID):
+def game(gameID, characterID):
     game = db.session.query(Game).filter(Game.id == gameID).first()
-    user = db.session.query(User).filter(User.id == userID).first().username
-    return render_template("gameScreen.html", game=game, user=user)
+    character = db.session.query(Character).filter(Character.id == characterID).first()
+    
+    return render_template("gameScreen.html", game=game, user=current_user.username, char=character)
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- LOG OUT ------------------------------------------
 #-----------------------------------------------------------------------------------------
