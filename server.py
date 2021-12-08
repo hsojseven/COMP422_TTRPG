@@ -8,6 +8,7 @@ from hashing import Hasher
 from flask import jsonify
 from werkzeug.utils import secure_filename
 import json
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(32)
@@ -34,6 +35,22 @@ with open(pepfile, 'rb') as fin:
   
 # create a new instance of Hasher using that pepper key
 pwd_hasher = Hasher(pepper_key)
+
+
+#create socket
+socketio = SocketIO(app)
+if __name__ == '__main__':
+    socketio.run(app, debug=True)
+
+def messageReceived(methods=['GET', 'POST']):
+    print('message received!')
+
+@socketio.on('my event')
+def handle_my_custom_event(json, methods=['GET', 'POST']):
+    print('received my event: ' + str(json))
+    socketio.emit('my response', json, callback=messageReceived)
+
+
 #-----------------------------------------------------------------------------------------
 #------------------------------------- USER TABLE ----------------------------------------
 #-----------------------------------------------------------------------------------------

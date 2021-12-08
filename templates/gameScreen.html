@@ -9,6 +9,8 @@
         <link rel="stylesheet" href="/static/styles/gameScreen.css">
         <script src="{{url_for('static', filename='gameScreen.js')}}"></script>
         <script src="https://unpkg.com/konva@8.3.0/konva.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
         <!--<title> In-Game: {{game.name}} </title>-->
     </head>
     <header>
@@ -18,10 +20,10 @@
           </div>
           <div class="d-flex">
             <a href="{{url_for('home')}}">
-            <button style="" class="btn btn-outline-success my-2 my-sm-0" type="submit"> Home </button>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit"> Home </button>
             </a>
             <a href="{{url_for('viewCharacters')}}">
-            <button style="" class="btn btn-outline-success my-2 my-sm-0 mx-2" type="submit"> Characters </button>
+            <button class="btn btn-outline-success my-2 my-sm-0 mx-2" type="submit"> Characters </button>
             </a>
           </div>
         </nav>
@@ -42,25 +44,65 @@
             <div id="msg-feed" class="panel-body border m-2 scrollarea" 
               style="overflow-y: scroll !important; height:250px !important; overflow-x: hidden;">
                 <!--LIST ITEMS GO HERE-->
-                <div class="left clearfix border-bottom my-1" style="">
+                <div class="left clearfix border-bottom my-1">
                   <p class="mx-2" style="color:MediumSeaGreen; word-break: break-all;"> Your Adventure Awaits! </p>
                 </div>
             </div>
 
             <div class="input-actions">
-              <form role="form">
+              <form action="" method="POST" role="form">
                 <div class="form-group m-2">
                   <textarea id="msg-box" class="form-control " style="resize:none; height:45px;" 
                     placeholder="Enter message..."></textarea>
                 </div>
                 <div class="form-group m-2">
                   <button id="sendMsg-btn" type="button" class="btn border"> Send </button>
+                  <input type="submit"> Send </input>
                 </div>
               </form>
 
-              <button id="roll-D6" style="" class="btn btn-outline-success m-2" > Roll D6 </button>
-              <button id="roll-D10" style="" class="btn btn-outline-success m-2" > Roll D10 </button>
-              <button id="roll-D20" style="" class="btn btn-outline-success m-2" > Roll D20 </button>
+              <script type="text/javascript">
+                var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+                socket.on('connect', function() 
+                {
+                    socket.emit('my event', {
+                        data: 'User Connected'
+                    })
+                    var form = $('form').on('sendMsg-btn', function(e) {
+                        e.preventDefault();
+                        let msgBox = document.getElementById("msg-box");
+                        let user_name = username.className;
+                        let user_input = msgBox.value;
+                        socket.emit('my event', {
+                            username : user_name,
+                            message : user_input
+                        }) 
+                        msgText.value = "";
+                    })
+                })
+
+                socket.on('my response', function(msg){
+                    console.log(msg);
+                    let msgFeed = document.getElementById("msg-feed");
+
+                    //construct message div and its text
+                    var msgElement = document.createElement("div");
+                    msgElement.className = "left clearfix border-bottom my-1";
+                    var msgPara = document.createElement("p");
+                    msgPara.className = "mx-2";
+                    msgPara.textContent = msg;
+                    msgPara.style.color="MediumSeaGreen";
+                    msgPara.style.wordBreak="break-all";
+                    msgElement.appendChild(msgPara);
+                    msgFeed.appendChild(msgElement);
+                    msgFeed.scrollTop = msgFeed.scrollHeight;
+                })  
+              </script>
+
+              <button id="roll-D6" class="btn btn-outline-success m-2" > Roll D6 </button>
+              <button id="roll-D10" class="btn btn-outline-success m-2" > Roll D10 </button>
+              <button id="roll-D20" class="btn btn-outline-success m-2" > Roll D20 </button>
               <button id="showHideGreen"  class="btn btn-outline-success m-2" > Show/Hide Green </button>
               <button id="showHideYellow"  class="btn btn-outline-success m-2" > Show/Hide Yellow </button>
               <button id="showHideBlue"  class="btn btn-outline-success m-2" > Show/Hide Blue </button>
