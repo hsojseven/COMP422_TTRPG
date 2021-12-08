@@ -61,6 +61,14 @@
               <button id="roll-D6" style="" class="btn btn-outline-success m-2" > Roll D6 </button>
               <button id="roll-D10" style="" class="btn btn-outline-success m-2" > Roll D10 </button>
               <button id="roll-D20" style="" class="btn btn-outline-success m-2" > Roll D20 </button>
+              <button id="showHideGreen"  class="btn btn-outline-success m-2" > Show/Hide Green </button>
+              <button id="showHideYellow"  class="btn btn-outline-success m-2" > Show/Hide Yellow </button>
+              <button id="showHideBlue"  class="btn btn-outline-success m-2" > Show/Hide Blue </button>
+              <button id="showHideRed"  class="btn btn-outline-success m-2" > Show/Hide Red </button>
+              <button id="showHideEnemyGreen"  class="btn btn-outline-success m-2" > Show/Hide Enemy Green </button>
+              <button id="showHideEnemyYellow"  class="btn btn-outline-success m-2" > Show/Hide Enemy Yellow </button>
+              <button id="showHideEnemyBlue"  class="btn btn-outline-success m-2" > Show/Hide Enemy Blue </button>
+              <button id="showHideEnemyRed"  class="btn btn-outline-success m-2" > Show/Hide Enemy Red </button>
             </div>
           </div>
           <!--CHARACTER CONTAINER  hidden on default-->
@@ -96,8 +104,9 @@
       <!-- *****************************
         ********************************
         ******************************** -->
+        {% if 1==1 %}
       <script>
-// {"attrs":{"width":958,"height":783},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"width":958,"height":783,"id":"BM"},"className":"Rect"},{"attrs":{"x":450,"y":375,"width":200,"height":100,"fill":"green","draggable":true,"id":"greenBox"},"className":"Rect"}]}]}      
+// {"attrs":{"width":958,"height":800},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"width":958,"height":783,"id":"BM"},"className":"Rect"},{"attrs":{"id":"greenBox","x":379,"y":386,"width":50,"height":50,"fill":"green","draggable":true,"stroke":"black"},"className":"Rect"},{"attrs":{"id":"redBox","x":450,"y":375,"width":50,"height":50,"fill":"red","draggable":true,"stroke":"black","visible":false},"className":"Rect"},{"attrs":{"id":"blueBox","x":450,"y":375,"width":50,"height":50,"fill":"blue","stroke":"black","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"yellowBox","x":450,"y":375,"width":50,"height":50,"fill":"yellow","stroke":"black","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"pinkBox","x":450,"y":375,"width":50,"height":50,"fill":"pink","stroke":"black","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"purpleBox","x":450,"y":375,"width":50,"height":50,"fill":"purple","stroke":"black","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"blackBox","x":450,"y":375,"width":50,"height":50,"fill":"black","stroke":"white","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"brownBox","x":450,"y":375,"width":50,"height":50,"fill":"brown","stroke":"black","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"tr"},"className":"Transformer"}]}]}      
     var height = 800;
     var width = 1000;
 
@@ -112,7 +121,7 @@
       stage.add(layer);
 
       
-      fetch('/api/getboard/1')
+      fetch('/api/getboard/1/')
         .then(response => response.json())
         .then(data => {
           console.log(data);
@@ -124,7 +133,7 @@
           imageObj.onload = function () {
             stage.findOne('#BM').fillPatternImage(imageObj);
           };
-          imageObj.src = '/static/battle_map.jpg';
+          imageObj.src = '/static/battle_map2.jpg';
 
           width = imageObj.naturalWidth;
           height = imageObj.naturalHeight;
@@ -146,6 +155,14 @@
             }
             else {
               stage.findOne('#greenBox').visible(true);
+            }
+          });
+          document.getElementById('showHideYellow').addEventListener('click', function () {
+            if(stage.findOne('#yellowBox').visible()) {
+              stage.findOne('#yellowBox').visible(false);
+            }
+            else {
+              stage.findOne('#yellowBox').visible(true);
             }
           });
 
@@ -192,15 +209,115 @@
           id: 'greenBox',
           x: rectX,
           y: rectY,
-          width: 200,
-          height: 100,
+          width: 50,
+          height: 50,
           fill: 'green',
           draggable: true,
-          visible: false
+          stroke: 'black',
+          strokeWidth: 2,
+          visible: true
         });
       }
       
       layer.add(createShape());
+
+      var rect2 = new Konva.Rect({
+        id: 'redBox',
+        x: rectX,
+        y: rectY,
+        width: 50,
+        height: 50,
+        fill: 'red',
+        draggable: true,
+        stroke: 'black',
+        strokeWidth: 2,
+        visible: false
+      });
+      layer.add(rect2);
+
+      var rect3 = new Konva.Rect({
+        id: 'blueBox',
+        x: rectX,
+        y: rectY,
+        width: 50,
+        height: 50,
+        fill: 'blue',
+        stroke: 'black',
+        strokeWidth: 2,
+        draggable: true,
+        visible: false
+      });
+      layer.add(rect3);
+
+      var rect4 = new Konva.Rect({
+        id: 'yellowBox',
+        x: rectX,
+        y: rectY,
+        width: 50,
+        height: 50,
+        fill: 'yellow',
+        stroke: 'black',
+        strokeWidth: 2,
+        draggable: true,
+        visible: false
+      });
+      layer.add(rect4);
+
+      var rect5 = new Konva.Rect({
+        id: 'pinkBox',
+        x: rectX,
+        y: rectY,
+        width: 50,
+        height: 50,
+        fill: 'pink',
+        stroke: 'black',
+        strokeWidth: 2,
+        draggable: true,
+        visible: false
+      });
+      layer.add(rect5);
+
+      var rect6 = new Konva.Rect({
+        id: 'purpleBox',
+        x: rectX,
+        y: rectY,
+        width: 50,
+        height: 50,
+        fill: 'purple',
+        stroke: 'black',
+        strokeWidth: 2,
+        draggable: true,
+        visible: false
+      });
+      layer.add(rect6);
+
+      var rect7 = new Konva.Rect({
+        id: 'blackBox',
+        x: rectX,
+        y: rectY,
+        width: 50,
+        height: 50,
+        fill: 'black',
+        stroke: 'white',
+        strokeWidth: 2,
+        draggable: true,
+        visible: false
+      });
+      layer.add(rect7);
+
+      var rect8 = new Konva.Rect({
+        id: 'brownBox',
+        x: rectX,
+        y: rectY,
+        width: 50,
+        height: 50,
+        fill: 'brown',
+        stroke: 'black',
+        strokeWidth: 2,
+        draggable: true,
+        visible: false
+      });
+      layer.add(rect8);
       
       var imageObj = new Image();
       imageObj.onload = function () {
@@ -271,6 +388,40 @@
 
 
     </script>
+
+    {% else %}
+    <script>
+      var height = 800;
+      var width = 1000;
+
+    
+      var stage = new Konva.Stage({
+        container: 'GameBoard',
+        width: width,
+        height: height,
+      });
+
+      var layer = new Konva.Layer();
+      stage.add(layer);
+
+      const interval = setInterval(function() {
+      fetch('/api/getboard/1/')
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          // TODO: This is where to fix the required reload (edit data json)
+          layer.destroyChildren();
+          stage = Konva.Node.create(data, 'GameBoard');
+
+          var imageObj = new Image();
+          imageObj.onload = function () {
+            stage.findOne('#BM').fillPatternImage(imageObj);
+          };
+          imageObj.src = '/static/battle_map.jpg';
+        });
+      }, 5000);
+    </script>
+    {% endif %}
         
     </body>
 </html>
