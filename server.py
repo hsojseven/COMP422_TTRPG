@@ -1,12 +1,10 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from sqlalchemy.orm import session
 from myforms import GameForm, LoginForm, RegisterForm, CharacterForm, JoinWithIDForm, JoinGameForm
-from flask_login import UserMixin, LoginManager, login_required
-from flask_login import login_user, logout_user, current_user
+from flask_login import UserMixin, LoginManager, login_required, login_user, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from hashing import Hasher
-from flask import jsonify
 from werkzeug.utils import secure_filename
 import json
 
@@ -35,8 +33,6 @@ with open(pepfile, 'rb') as fin:
   
 # create a new instance of Hasher using that pepper key
 pwd_hasher = Hasher(pepper_key)
-
-
 #-----------------------------------------------------------------------------------------
 #------------------------------------- USER TABLE ----------------------------------------
 #-----------------------------------------------------------------------------------------
@@ -48,7 +44,7 @@ class User(UserMixin, db.Model):
     characters = db.relationship('Character', backref='Characters')
     games = db.relationship('Player', backref='Games')
     
-     # make a write-only password property that just updates the stored hash
+    # make a write-only password property that just updates the stored hash
     @property
     def password(self):
         raise AttributeError("password is a write-only attribute")
@@ -98,25 +94,6 @@ class Player(db.Model):
 # WILL WIPE ALL DB DATA
 #db.drop_all()
 #db.create_all()
-
-user1 = User(id=1, username="bobBuilding")
-user2 = User(id=2, username="laryLobster")
-user3 = User(id=3, username="davidV")
-
-char1 = Character(id=1, userID=user1.id, name="Grug", strength=24, dexterity=14, constitution=20, intelligence=0, wisdom=10, charisma=0)
-char2 = Character(id=2, userID=user1.id, name="Valfore", strength=10, dexterity=16, constitution=16, intelligence=14, wisdom=13, charisma=24)
-char3 = Character(id=3, userID=user2.id, name="Bobby", strength=10, dexterity=23, constitution=16, intelligence=16, wisdom=16, charisma=10)
-char4 = Character(id=4, userID=user2.id, name="Zerashale", strength=20, dexterity=12, constitution=16, intelligence=16, wisdom=12, charisma=20)
-char5 = Character(id=5, userID=user3.id, name="Cul'gal", strength=12, dexterity=13, constitution=12, intelligence=25, wisdom=18, charisma=16)
-
-game1 = Game(id=1, name="Raiders", description="This game will be played MWF at 8pm.")
-game2 = Game(id=2, name="Mists over Camelot", description="Game containing players that play a game sometimes.")
-game3 = Game(id=3, name="Vault of Kal'thari", description="Venture into the vault where many never return. Become rich, or die trying.")
-
-player1 = Player(userID=user1.id, gameID=game1.id, role=0)
-
-#db.session.add_all((user1, user2, user3, char1, char2, char3, char4, char5, game1, game2, game3, player1))
-#db.session.commit()
 #-----------------------------------------------------------------------------------------
 #---------------------------------- REGISTER NEW USER ------------------------------------
 #-----------------------------------------------------------------------------------------
@@ -188,12 +165,12 @@ def home():
     newGameForm = GameForm()
     joinWithIDForm = JoinWithIDForm()
     joinGameForm = JoinGameForm()
-    gameList=db.session.query(Game, Player).join(Game, Game.id==Player.gameID).filter(Player.userID == current_user.id).all()
+    gameList = db.session.query(Game, Player).join(Game, Game.id==Player.gameID).filter(Player.userID == current_user.id).all()
     
     joinGameForm.characters.choices = [
         (items.id, items.name) for items in Character.query.all()]
     joinGameForm.games.choices=[
-        (items.id, items.name) for items in Game.query.all()]
+        (items[0].id, items[0].name) for items in gameList]
     
     if request.method == 'GET':
         return render_template("home.html", gameList=gameList, user=current_user, form=newGameForm, 
@@ -234,7 +211,6 @@ def home():
             for field,error in newGameForm.errors.items():
                 flash(f"{field}: {error}")
             return redirect(url_for("addGame"))
-        
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- CHARACTER ROUTE ----------------------------------
 #-----------------------------------------------------------------------------------------
@@ -315,7 +291,7 @@ def remove_game(gameID):
     db.session.commit()
     return redirect(url_for('home'))
 #-----------------------------------------------------------------------------------------
-#-------------------------------------- REMOVE CHARACTER --------------------------------------
+#--------------------------------- REMOVE CHARACTER --------------------------------------
 #-----------------------------------------------------------------------------------------
 @app.get('/viewCharacters/<characterID>')
 @login_required
@@ -324,9 +300,9 @@ def remove_character(characterID):
     db.session.delete(char_to_rmv)
     db.session.commit()
     return redirect(url_for('viewCharacters'))
-
-
-# API #
+#-----------------------------------------------------------------------------------------
+#------------------------------------- CUSTOM API  ---------------------------------------
+#-----------------------------------------------------------------------------------------
 @app.route("/api/getboard/<gameID>/")
 def get_board(gameID):
     gameBoard = db.session.query(Game).filter(Game.id == gameID).first()
