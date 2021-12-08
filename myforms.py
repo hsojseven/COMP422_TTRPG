@@ -3,7 +3,7 @@ from wtforms import StringField, SubmitField, PasswordField
 from wtforms.fields.core import SelectField
 from flask_wtf.file import FileField
 from wtforms import validators
-from wtforms.fields.html5 import IntegerField
+from wtforms import IntegerField
 from wtforms.fields.simple import TextAreaField
 from wtforms.validators import InputRequired, EqualTo, Length, NumberRange
 
