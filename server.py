@@ -223,7 +223,7 @@ def home():
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- CHARACTER ROUTE ----------------------------------
 #-----------------------------------------------------------------------------------------
-@app.route("/viewCharacters/", methods=["GET", "POST"])
+@app.route("/viewCharacters/", methods=["GET", "POST", "PUT"])
 @login_required
 def viewCharacters():
     newCharacterForm = CharacterForm()
@@ -241,6 +241,25 @@ def viewCharacters():
             db.session.add(character)
             db.session.commit()
             db.session.flush()
+            return redirect(url_for("viewCharacters"))
+        else:
+            for field,error in newCharacterForm.errors.items():
+                flash(f"{field}: {error}")
+            return redirect(url_for("viewCharacters"))
+    if request.method == "PUT":
+        post = Character.query.get_or_404(Character.id)
+        editForm = CharacterForm()
+        if newCharacterForm.validate_on_submit():
+            post.name = editForm.name.data
+            post.strength = editForm.strength.data
+            post.dexterity = editForm.dexterity.data
+            post.constitution = editForm.constitution.data
+            post.intelligence = editForm.intelligence.data
+            post.wisdom = editForm.wisdom.data
+            post.charisma = editForm.charisma.data
+
+            db.session.add(post)
+            db.session.commit()
             return redirect(url_for("viewCharacters"))
         else:
             for field,error in newCharacterForm.errors.items():
