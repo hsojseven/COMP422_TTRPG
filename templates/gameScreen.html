@@ -56,9 +56,30 @@
                     placeholder="Enter message..."></textarea>
                 </div>
                 <div class="form-group m-2">
+                  <button type="button" id="send" class="btn btn-success">SEND</button>
                   <button id="sendMsg-btn" type="button" class="btn border"> Send </button>
                 </div>
               </form>
+
+              <script type="text/javascript" charset="utf-8">
+                var socket;
+                $(document).ready(function() {
+                  socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
+                  socket.on('status', function(data) {
+                    $('#chat').val($('#chat').val() + '<' + data.msg + '>\n');
+                    $('#chat').scrollTop($('#chat')[0].scrollHeight);
+                  });
+                  socket.on('message', function(data) {
+                    $('#chat').val($('#chat').val() + data.msg + '\n');
+                    $('#chat').scrollTop($('#chat')[0].scrollHeight);
+                  });
+                  $('#send').click(function(e) {
+                        text = $('#text').val();
+                        $('#text').val('');
+                        socket.emit('text', {msg: text});
+                  });
+                });
+              </script>
 
 
               <button id="roll-D6" class="btn btn-outline-success m-2" > Roll D6 </button>

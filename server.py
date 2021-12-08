@@ -1,5 +1,6 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash
+from sqlalchemy.orm import session
 from myforms import GameForm, LoginForm, RegisterForm, CharacterForm, JoinWithIDForm, JoinGameForm
 from flask_login import UserMixin, LoginManager, login_required
 from flask_login import login_user, logout_user, current_user
@@ -8,6 +9,8 @@ from hashing import Hasher
 from flask import jsonify
 from werkzeug.utils import secure_filename
 import json
+from flask_socketio import SocketIO, emit
+from flask_session import Session
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(32)
@@ -37,7 +40,12 @@ pwd_hasher = Hasher(pepper_key)
 
 
 #create socket
+Session(app)
+socketio = SocketIO(app, manage_session=False)
 
+socketio.on('text', namespace='/game/<gameID>/<characterID>/')
+def text(message):
+    emit('message', {'msg': session.get('username') + ' : ' + message['msg']})
 
 
 #-----------------------------------------------------------------------------------------
