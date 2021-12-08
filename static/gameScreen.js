@@ -39,13 +39,13 @@ window.addEventListener("DOMContentLoaded", function() {
 
 
 // Add message in message box to MSG feed
-/*function sendMessage()
+function sendMessage()
 {
     let msgText = document.getElementById("msg-box");
     let username = document.getElementById("username");
     addMsgToFeed(`${username.className}: ${msgText.value}`);
     msgText.value = "";
-}*/
+}
 
 //TODO: Add a name to the front of the message - custom "name" or default "server"
 //create a div and add it to the feed
