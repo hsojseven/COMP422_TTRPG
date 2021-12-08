@@ -91,98 +91,139 @@
         <!-- Game Board -->
         <div id="GameBoard" class="w-75 border"></div>
       </div>
+
+
+      <!-- *****************************
+        ********************************
+        ******************************** -->
       <script>
-      // define several math function
-      function getCorner(pivotX, pivotY, diffX, diffY, angle) {
-        const distance = Math.sqrt(diffX * diffX + diffY * diffY);
+// {"attrs":{"width":958,"height":783},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"width":958,"height":783,"id":"BM"},"className":"Rect"},{"attrs":{"x":450,"y":375,"width":200,"height":100,"fill":"green","draggable":true,"id":"greenBox"},"className":"Rect"}]}]}      
+    var height = 800;
+    var width = 1000;
 
-        /// find angle from pivot to corner
-        angle += Math.atan2(diffY, diffX);
-
-        /// get new x and y and round it off to integer
-        const x = pivotX + distance * Math.cos(angle);
-        const y = pivotY + distance * Math.sin(angle);
-
-        return { x: x, y: y };
-      }
-      function getClientRect(rotatedBox) {
-        const { x, y, width, height } = rotatedBox;
-        const rad = rotatedBox.rotation;
-
-        const p1 = getCorner(x, y, 0, 0, rad);
-        const p2 = getCorner(x, y, width, 0, rad);
-        const p3 = getCorner(x, y, width, height, rad);
-        const p4 = getCorner(x, y, 0, height, rad);
-
-        const minX = Math.min(p1.x, p2.x, p3.x, p4.x);
-        const minY = Math.min(p1.y, p2.y, p3.y, p4.y);
-        const maxX = Math.max(p1.x, p2.x, p3.x, p4.x);
-        const maxY = Math.max(p1.y, p2.y, p3.y, p4.y);
-
-        return {
-          x: minX,
-          y: minY,
-          width: maxX - minX,
-          height: maxY - minY,
-        };
-      }
-
-      function getTotalBox(boxes) {
-        let minX = Infinity;
-        let minY = Infinity;
-        let maxX = -Infinity;
-        let maxY = -Infinity;
-
-        boxes.forEach((box) => {
-          minX = Math.min(minX, box.x);
-          minY = Math.min(minY, box.y);
-          maxX = Math.max(maxX, box.x + box.width);
-          maxY = Math.max(maxY, box.y + box.height);
-        });
-        return {
-          x: minX,
-          y: minY,
-          width: maxX - minX,
-          height: maxY - minY,
-        };
-      }
-
-      var imageObj = new Image();
-      imageObj.src = '/static/battle_map.jpg'
-      console.log("async");
-
-      let board = document.getElementById('GameBoard')
-      const stage = new Konva.Stage({
+    
+    var stage = new Konva.Stage({
         container: 'GameBoard',
-        width: imageObj.naturalWidth,
-        height: imageObj.naturalHeight,
+        width: width,
+        height: height,
       });
 
-      const layer = new Konva.Layer();
+      var layer = new Konva.Layer();
       stage.add(layer);
 
-      const background = new Konva.Rect({
-        x: 0,
-        y: 0,
-        width: imageObj.naturalWidth,
-        height: imageObj.naturalHeight,
-        fillPatternImage: imageObj,
-        draggable: false
-      });
-      layer.add(background);
       
+      fetch('/api/getboard/1')
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          // TODO: This is where to fix the required reload (edit data json)
+          layer.destroyChildren();
+          stage = Konva.Node.create(data, 'GameBoard');
 
-      const shape1 = new Konva.Rect({
-        x: stage.width() / 2 - 60,
-        y: stage.height() / 2 - 60,
-        width: 50,
-        height: 50,
-        fill: 'red',
-        draggable: true,
+          var imageObj = new Image();
+          imageObj.onload = function () {
+            stage.findOne('#BM').fillPatternImage(imageObj);
+          };
+          imageObj.src = '/static/battle_map.jpg';
+
+          width = imageObj.naturalWidth;
+          height = imageObj.naturalHeight;
+
+          stage.findOne('#BM').moveToBottom();
+
+          // Add box to trans
+          stage.findOne('#greenBox').on('click', function() {
+            stage.findOne('#tr').nodes([this])
+          });
+
+          stage.findOne('#BM').on('click', function() {
+            stage.findOne('#tr').nodes([])
+          });
+
+          document.getElementById('showHideGreen').addEventListener('click', function () {
+            if(stage.findOne('#greenBox').visible()) {
+              stage.findOne('#greenBox').visible(false);
+            }
+            else {
+              stage.findOne('#greenBox').visible(true);
+            }
+          });
+
+          stage.findOne('#greenBox').on('dragmove', function() {
+            const absPos = this.getAbsolutePosition();
+            // where are shapes inside bounding box of all shapes?
+            const offsetX = this.x() - absPos.x;
+            const offsetY = this.y() - absPos.y;
+
+            // we total box goes outside of viewport, we need to move absolute position of shape
+            const newAbsPos = { ...absPos };
+            if (this.x() < 0) {
+              newAbsPos.x = -offsetX;
+            }
+            if (this.y() < 0) {
+              newAbsPos.y = -offsetY;
+            }
+            if (this.x() + this.width() > stage.width()) {
+              newAbsPos.x = stage.width() - this.width() - offsetX;
+            }
+            if (this.y() + this.height() > stage.height()) {
+              newAbsPos.y = stage.height() - this.height() - offsetY;
+            }
+            this.setAbsolutePosition(newAbsPos);
+        });
       });
-      layer.add(shape1);
+      
+      
+        
+      
+      /*
+      var stage = new Konva.Stage({
+        container: 'GameBoard',
+        width: width,
+        height: height,
+      });
+
+      var layer = new Konva.Layer();
+      var rectX = stage.width() / 2 - 50;
+      var rectY = stage.height() / 2 - 25;
+
+      function createShape(){
+        return new Konva.Rect({
+          id: 'greenBox',
+          x: rectX,
+          y: rectY,
+          width: 200,
+          height: 100,
+          fill: 'green',
+          draggable: true,
+          visible: false
+        });
+      }
+      
+      layer.add(createShape());
+      
+      var imageObj = new Image();
+      imageObj.onload = function () {
+        var map = new Konva.Rect({
+          x: 0,
+          y: 0,
+          image: imageObj,
+          width: imageObj.naturalWidth,
+          height: imageObj.naturalHeight,
+          fillPatternImage: imageObj,
+          id: 'BM'
+        });
+        // add the shape to the layer
+        layer.add(map);
+        map.moveToBottom()
+      };
+      imageObj.src = '/static/battle_map.jpg';
+
+      width = imageObj.naturalWidth;
 
       const tr = new Konva.Transformer({
+        id: "tr",
+        nodes: [],
         boundBoxFunc: (oldBox, newBox) => {
           const box = getClientRect(newBox);
           const isOut =
@@ -190,80 +231,45 @@
             box.y < 0 ||
             box.x + box.width > stage.width() ||
             box.y + box.height > stage.height();
-
-          // if new bounding box is out of visible viewport, let's just skip transforming
-          // this logic can be improved by still allow some transforming if we have small available space
           if (isOut) {
             return oldBox;
           }
           return newBox;
         },
       });
-      layer.add(tr);
+      layer.add(tr)
+      stage.add(layer);
+      */
+      
+      
 
-      shape1.on('dragmove', () =>{
-          const absPos = shape1.getAbsolutePosition();
-          // where are shapes inside bounding box of all shapes?
-          const offsetX = shape1.x - absPos.x;
-          const offsetY = shape1.y - absPos.y;
 
-          // we total box goes outside of viewport, we need to move absolute position of shape
-          const newAbsPos = { ...absPos };
-          if (shape1.x < 0) {
-            newAbsPos.x = -offsetX;
-          }
-          if (shape1.y < 0) {
-            newAbsPos.y = -offsetY;
-          }
-          if (shape1.x + shape1.width > stage.width()) {
-            newAbsPos.x = stage.width() - shape1.width - offsetX;
-          }
-          if (shape1.y + shape1.height > stage.height()) {
-            newAbsPos.y = stage.height() - shape1.height - offsetY;
-          }
-          shape1.setAbsolutePosition(newAbsPos);
+      async function postData(url = '', data = {}) {
+      // Default options are marked with *
+      const response = await fetch(url, {
+        method: 'POST',
+        cache: 'no-cache',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        referrerPolicy: 'no-referrer', 
+        body: JSON.stringify(data) 
       });
+      return await response.json(); // parses JSON response into native JavaScript objects
+      }
 
-      // we can use transformer event
-      // or just shape event
-      tr.on('dragmove', () => {
-        const boxes = tr.nodes().map((node) => node.getClientRect());
-        const box = getTotalBox(boxes);
-        tr.nodes().forEach((shape) => {
-          const absPos = shape.getAbsolutePosition();
-          // where are shapes inside bounding box of all shapes?
-          const offsetX = box.x - absPos.x;
-          const offsetY = box.y - absPos.y;
+      const interval = setInterval(function() {
+        var myObj = JSON.parse(stage.toJSON());
+        myObj.attrs.height = height;
+        myObj.attrs.width = width;
 
-          // we total box goes outside of viewport, we need to move absolute position of shape
-          const newAbsPos = { ...absPos };
-          if (box.x < 0) {
-            newAbsPos.x = -offsetX;
-          }
-          if (box.y < 0) {
-            newAbsPos.y = -offsetY;
-          }
-          if (box.x + box.width > stage.width()) {
-            newAbsPos.x = stage.width() - box.width - offsetX;
-          }
-          if (box.y + box.height > stage.height()) {
-            newAbsPos.y = stage.height() - box.height - offsetY;
-          }
-          shape.setAbsolutePosition(newAbsPos);
-        });
-      });
+        postData('/api/addboard/1/', JSON.stringify(myObj))
+          .then(data => {
+            console.log("Posted to the server"); // JSON data parsed by `data.json()` call
+          });
+      }, 1000);
 
-      stage.on('click tap', function (e){
-        if (e.target === stage){
-          tr.nodes([]);
-        }
-        if (e.target === shape1) {
-          tr.nodes([shape1])
-        }
-        if (e.target === background) {
-          tr.nodes([])
-        }
-      });
+
     </script>
         
     </body>
