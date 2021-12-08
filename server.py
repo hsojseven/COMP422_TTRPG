@@ -9,8 +9,6 @@ from hashing import Hasher
 from flask import jsonify
 from werkzeug.utils import secure_filename
 import json
-from flask_socketio import SocketIO, emit
-from flask_session import Session
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(32)
@@ -37,15 +35,6 @@ with open(pepfile, 'rb') as fin:
   
 # create a new instance of Hasher using that pepper key
 pwd_hasher = Hasher(pepper_key)
-
-
-#create socket
-Session(app)
-socketio = SocketIO(app, manage_session=False)
-
-socketio.on('text', namespace='/game/<gameID>/<characterID>/')
-def text(message):
-    emit('message', {'msg': session.get('username') + ' : ' + message['msg']})
 
 
 #-----------------------------------------------------------------------------------------
