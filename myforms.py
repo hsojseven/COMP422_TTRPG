@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.fields.core import SelectField
-from wtforms.fields.html5 import IntegerField
+from flask_wtf.file import FileField
+from wtforms import validators
+from wtforms import IntegerField
 from wtforms.fields.simple import TextAreaField
 from wtforms.validators import InputRequired, EqualTo, Length, NumberRange
 
@@ -14,6 +16,7 @@ class LoginForm(FlaskForm):
 class GameForm(FlaskForm):
   name = StringField(validators=[InputRequired()])
   description = TextAreaField(validators=[InputRequired()])
+  map = FileField()
   submit = SubmitField("Add")
 
 class JoinWithIDForm(FlaskForm):

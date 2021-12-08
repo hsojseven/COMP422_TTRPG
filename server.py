@@ -1,11 +1,14 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash
+from sqlalchemy.orm import session
 from myforms import GameForm, LoginForm, RegisterForm, CharacterForm, JoinWithIDForm, JoinGameForm
 from flask_login import UserMixin, LoginManager, login_required
 from flask_login import login_user, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from hashing import Hasher
 from flask import jsonify
+from werkzeug.utils import secure_filename
+import json
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(32)
@@ -32,6 +35,8 @@ with open(pepfile, 'rb') as fin:
   
 # create a new instance of Hasher using that pepper key
 pwd_hasher = Hasher(pepper_key)
+
+
 #-----------------------------------------------------------------------------------------
 #------------------------------------- USER TABLE ----------------------------------------
 #-----------------------------------------------------------------------------------------
@@ -196,7 +201,17 @@ def home():
     
     if request.method == "POST":
         if newGameForm.submit.data and newGameForm.validate():
-            game = Game(name=newGameForm.name.data, description=newGameForm.description.data)
+
+            #filename = secure_filename(newGameForm.map.data.filename)
+            #newGameForm.map.data.save('uploads/' + filename)
+            # save file from input
+            image_data = request.files[newGameForm.map.name].read()
+            path = f"./static/{newGameForm.map.name}"
+            file = open(path, "w")
+            file.write(image_data)
+            file.close()
+
+            game = Game(name=newGameForm.name.data, description=newGameForm.description.data, board=path)
             db.session.add(game)
             db.session.commit()
             db.session.flush()
@@ -313,12 +328,18 @@ def remove_character(characterID):
 
 # API #
 @app.route("/api/getboard/<gameID>/")
-@login_required
 def get_board(gameID):
     gameBoard = db.session.query(Game).filter(Game.id == gameID).first()
-    return gameBoard.board
+    return jsonify(gameBoard.board)
 
-@app.route("/api/addboard/<gameID>/")
+@app.route("/api/addboard/<gameID>/", methods=["POST"])
 def set_board(gameID):
+    content = str(request.json)
     gameBoard = db.session.query(Game).filter(Game.id == gameID).first()
+    gameBoard.board = content
+    
+    db.session.add(gameBoard)
+    db.session.commit()
+    db.session.flush()
+
     return jsonify(gameBoard.board)
