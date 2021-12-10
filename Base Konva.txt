@@ -1,0 +1,167 @@
+      
+      /*
+      var stage = new Konva.Stage({
+        container: 'GameBoard',
+        width: width,
+        height: height,
+      });
+
+      var layer = new Konva.Layer();
+      var rectX = stage.width() / 2 - 50;
+      var rectY = stage.height() / 2 - 25;
+
+      function createShape(){
+        return new Konva.Rect({
+          id: 'greenBox',
+          x: rectX,
+          y: rectY,
+          width: 50,
+          height: 50,
+          fill: 'green',
+          draggable: true,
+          stroke: 'black',
+          strokeWidth: 2,
+          visible: true
+        });
+      }
+      
+      layer.add(createShape());
+
+      var rect2 = new Konva.Rect({
+        id: 'redBox',
+        x: rectX,
+        y: rectY,
+        width: 50,
+        height: 50,
+        fill: 'red',
+        draggable: true,
+        stroke: 'black',
+        strokeWidth: 2,
+        visible: false
+      });
+      layer.add(rect2);
+
+      var rect3 = new Konva.Rect({
+        id: 'blueBox',
+        x: rectX,
+        y: rectY,
+        width: 50,
+        height: 50,
+        fill: 'blue',
+        stroke: 'black',
+        strokeWidth: 2,
+        draggable: true,
+        visible: false
+      });
+      layer.add(rect3);
+
+      var rect4 = new Konva.Rect({
+        id: 'yellowBox',
+        x: rectX,
+        y: rectY,
+        width: 50,
+        height: 50,
+        fill: 'yellow',
+        stroke: 'black',
+        strokeWidth: 2,
+        draggable: true,
+        visible: false
+      });
+      layer.add(rect4);
+
+      var rect5 = new Konva.Rect({
+        id: 'pinkBox',
+        x: rectX,
+        y: rectY,
+        width: 50,
+        height: 50,
+        fill: 'pink',
+        stroke: 'black',
+        strokeWidth: 2,
+        draggable: true,
+        visible: false
+      });
+      layer.add(rect5);
+
+      var rect6 = new Konva.Rect({
+        id: 'purpleBox',
+        x: rectX,
+        y: rectY,
+        width: 50,
+        height: 50,
+        fill: 'purple',
+        stroke: 'black',
+        strokeWidth: 2,
+        draggable: true,
+        visible: false
+      });
+      layer.add(rect6);
+
+      var rect7 = new Konva.Rect({
+        id: 'blackBox',
+        x: rectX,
+        y: rectY,
+        width: 50,
+        height: 50,
+        fill: 'black',
+        stroke: 'white',
+        strokeWidth: 2,
+        draggable: true,
+        visible: false
+      });
+      layer.add(rect7);
+
+      var rect8 = new Konva.Rect({
+        id: 'brownBox',
+        x: rectX,
+        y: rectY,
+        width: 50,
+        height: 50,
+        fill: 'brown',
+        stroke: 'black',
+        strokeWidth: 2,
+        draggable: true,
+        visible: false
+      });
+      layer.add(rect8);
+      
+      var imageObj = new Image();
+      imageObj.onload = function () {
+        var map = new Konva.Rect({
+          x: 0,
+          y: 0,
+          image: imageObj,
+          width: imageObj.naturalWidth,
+          height: imageObj.naturalHeight,
+          fillPatternImage: imageObj,
+          id: 'BM'
+        });
+        // add the shape to the layer
+        layer.add(map);
+        map.moveToBottom()
+      };
+      imageObj.src = '/static/battle_map.jpg';
+
+      width = imageObj.naturalWidth;
+
+      const tr = new Konva.Transformer({
+        id: "tr",
+        nodes: [],
+        boundBoxFunc: (oldBox, newBox) => {
+          const box = getClientRect(newBox);
+          const isOut =
+            box.x < 0 ||
+            box.y < 0 ||
+            box.x + box.width > stage.width() ||
+            box.y + box.height > stage.height();
+          if (isOut) {
+            return oldBox;
+          }
+          return newBox;
+        },
+      });
+      layer.add(tr)
+      stage.add(layer);
+      */
+      
+      

@@ -55,9 +55,7 @@
                     <br>
                     Cha: {{char.charisma}}
                   </p>
-                  <button id="editButton" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editCharacterModal">
-                    Edit
-                  </button>
+                  
               </div>
             </div>
           </div>
@@ -114,7 +112,7 @@
                 {{form.charisma.label(for="floatingInput")}}
               </div>  
               <div class="d-grid gap-2 pt-3">
-                <div class="form">{{form.submit(class="btn btn-outline-success btn-md w-100", tabindex="-1") }}</div>
+                <div class="form">{{form.characterSubmit(class="btn btn-outline-success btn-md w-100", tabindex="-1") }}</div>
                 <a href="{{url_for('viewCharacters')}}" class="btn btn-outline-success btn-md" tabindex="-1" role="button">Cancel</a>
               </div>
             </form>
@@ -163,7 +161,7 @@
                 {{editForm.charisma.label(for="floatingInput")}}
               </div>  
               <div class="d-grid gap-2 pt-3">
-                <div class="form">{{editForm  .submit(class="btn btn-outline-success btn-md w-100", tabindex="-1") }}</div>
+                <div class="form">{{editForm.submit(class="btn btn-outline-success btn-md w-100", tabindex="-1") }}</div>
                 <a href="{{url_for('viewCharacters')}}" class="btn btn-outline-success btn-md" tabindex="-1" role="button">Cancel</a>
               </div>
             </form>
