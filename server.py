@@ -1,5 +1,9 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session
+import flask
+import flask_login
+import flask_socketio
+import flask_sqlalchemy
 from sqlalchemy.orm import session
 from flask import Flask, render_template, request, redirect, url_for, flash
 from sqlalchemy.util.langhelpers import NoneType
@@ -11,6 +15,8 @@ from werkzeug.utils import secure_filename
 import json
 import random
 import string
+from flask_socketio import SocketIO
+from flask_socketio import emit, join_room, leave_room
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(32)
@@ -37,6 +43,26 @@ with open(pepfile, 'rb') as fin:
   
 # create a new instance of Hasher using that pepper key
 pwd_hasher = Hasher(pepper_key)
+
+#set up socket for chat messaging
+socketio = SocketIO(app)
+
+@socketio.on('joined', namespace='/game/')
+def joined(message):
+    """Sent by clients when they enter a room.
+    A status message is broadcast to all people in the room."""
+    room = flask.session.get('room')
+    join_room(room)
+    #emit('status', {'msg': session.get('name') + ' has entered the room.'}, room=room)
+
+@socketio.on('text', namespace='/game/')
+def text(message):
+    print('MESSAGE RECEIEVED!')
+    room = flask.session.get('room') 
+    emit('message', {'msg': message['msg']}, room=room)
+    
+
+
 #-----------------------------------------------------------------------------------------
 #------------------------------------- USER TABLE ----------------------------------------
 #-----------------------------------------------------------------------------------------
@@ -71,7 +97,6 @@ class Game(db.Model):
     board = db.Column(db.Unicode, nullable=True)
     imgUrl = db.Column(db.Unicode, nullable=True)
     gamers = db.relationship('Player', backref='Gamers')
-    #msgHistory = db.Column(db.Unicode, nullable=True)
     
 #-----------------------------------------------------------------------------------------
 #----------------------------------- CHARACTER TABLE -------------------------------------
@@ -271,11 +296,13 @@ def viewCharacters():
 @app.route("/game/<gameID>/<characterID>/", methods=["GET", "POST"])
 @login_required
 def game(gameID, characterID):
+    print('ENTERING GAME SCREEN')
     game = db.session.query(Game).filter(Game.id == gameID).first()
+    flask.session['room'] = str(game.id)
     character = db.session.query(Character).filter(Character.id == characterID).first()
     rolePlayer = db.session.query(Player).filter(Player.gameID == game.id).filter(Player.userID == current_user.id).first()
     
-    ## TODO: REMOVE
+     #TODO: REMOVE
     if(isinstance(rolePlayer, NoneType)):
         return render_template("gameScreen.html", game=game, user=current_user.username, char=character, role=0)
     
