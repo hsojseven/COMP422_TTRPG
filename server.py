@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from sqlalchemy.orm import session
 from flask import Flask, render_template, request, redirect, url_for, flash
 from sqlalchemy.util.langhelpers import NoneType
-from myforms import GameForm, LoginForm, RegisterForm, CharacterForm, JoinWithIDForm, JoinGameForm
+from myforms import GameForm, LoginForm, RegisterForm, CharacterForm, JoinWithIDForm, JoinGameForm, EditForm
 from flask_login import UserMixin, LoginManager, login_required, login_user, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from hashing import Hasher
@@ -99,8 +99,8 @@ class Player(db.Model):
 
 # Use to clear tables and edit structure
 # WILL WIPE ALL DB DATA
-#db.drop_all()
-#db.create_all()
+# db.drop_all()
+# db.create_all()
 #-----------------------------------------------------------------------------------------
 #---------------------------------- REGISTER NEW USER ------------------------------------
 #-----------------------------------------------------------------------------------------
@@ -227,9 +227,10 @@ def home():
 @login_required
 def viewCharacters():
     newCharacterForm = CharacterForm()
+    editForm = EditForm()
     characterList=db.session.query(Character).filter(Character.userID == current_user.id).all()
     if request.method == 'GET':
-        return render_template("viewCharacters.html", form=newCharacterForm, charList=characterList)
+        return render_template("viewCharacters.html", form=newCharacterForm, charList=characterList, editForm = editFormx)
     
     if request.method == "POST":
         if newCharacterForm.validate():
@@ -246,7 +247,7 @@ def viewCharacters():
             for field,error in newCharacterForm.errors.items():
                 flash(f"{field}: {error}")
             return redirect(url_for("viewCharacters"))
-     if request.method == "PUT":
+    if request.method == "PUT":
         db.session.query(User, Character).join(User, User.id==Character.userID).all()
         editForm.name.data = "Bob"
         editForm.strength.data = "Bob"
