@@ -246,21 +246,27 @@ def viewCharacters():
             for field,error in newCharacterForm.errors.items():
                 flash(f"{field}: {error}")
             return redirect(url_for("viewCharacters"))
-    if request.method == "PUT":
-        post = Character.query.get_or_404(Character.id)
-        editForm = CharacterForm()
-        if newCharacterForm.validate_on_submit():
-            post.name = editForm.name.data
-            post.strength = editForm.strength.data
-            post.dexterity = editForm.dexterity.data
-            post.constitution = editForm.constitution.data
-            post.intelligence = editForm.intelligence.data
-            post.wisdom = editForm.wisdom.data
-            post.charisma = editForm.charisma.data
-
-            db.session.add(post)
+     if request.method == "PUT":
+        db.session.query(User, Character).join(User, User.id==Character.userID).all()
+        editForm.name.data = "Bob"
+        editForm.strength.data = "Bob"
+        editForm.dexterity.data = "Bob"
+        editForm.constitution.data = "Bob"
+        editForm.intelligence.data = "Bob"
+        editForm.wisdom.data = "Bob"
+        editForm.charisma.data = "Bob"
+        
+        if editForm.validate():
+            char = characterList.query.get(id)
+            char.name = editForm.name.data
+            char.strength = editForm.name.data
+            char.dexterity = editForm.name.data
+            char.constitution = editForm.constitution.data
+            char.intelligence = editForm.intelligence.data
+            char.wisdom = editForm.wisdom.data
+            char.charisma = editForm.charisma.data
             db.session.commit()
-            return redirect(url_for("viewCharacters"))
+            return redirect(url_for("viewCharacters", editForm = editForm))
         else:
             for field,error in newCharacterForm.errors.items():
                 flash(f"{field}: {error}")
