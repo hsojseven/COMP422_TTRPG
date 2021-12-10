@@ -7,7 +7,7 @@ import flask_sqlalchemy
 from sqlalchemy.orm import session
 from flask import Flask, render_template, request, redirect, url_for, flash
 from sqlalchemy.util.langhelpers import NoneType
-from myforms import GameForm, LoginForm, RegisterForm, CharacterForm, JoinWithIDForm, JoinGameForm
+from myforms import GameForm, LoginForm, RegisterForm, CharacterForm, JoinWithIDForm, JoinGameForm, EditForm
 from flask_login import UserMixin, LoginManager, login_required, login_user, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from hashing import Hasher
@@ -124,8 +124,8 @@ class Player(db.Model):
 
 # Use to clear tables and edit structure
 # WILL WIPE ALL DB DATA
-#db.drop_all()
-#db.create_all()
+# db.drop_all()
+# db.create_all()
 #-----------------------------------------------------------------------------------------
 #---------------------------------- REGISTER NEW USER ------------------------------------
 #-----------------------------------------------------------------------------------------
@@ -252,9 +252,10 @@ def home():
 @login_required
 def viewCharacters():
     newCharacterForm = CharacterForm()
+    editForm = EditForm()
     characterList=db.session.query(Character).filter(Character.userID == current_user.id).all()
     if request.method == 'GET':
-        return render_template("viewCharacters.html", form=newCharacterForm, charList=characterList)
+        return render_template("viewCharacters.html", form=newCharacterForm, charList=characterList, editForm = editFormx)
     
     if request.method == "POST":
         if newCharacterForm.validate():
@@ -272,20 +273,26 @@ def viewCharacters():
                 flash(f"{field}: {error}")
             return redirect(url_for("viewCharacters"))
     if request.method == "PUT":
-        post = Character.query.get_or_404(Character.id)
-        editForm = CharacterForm()
-        if newCharacterForm.validate_on_submit():
-            post.name = editForm.name.data
-            post.strength = editForm.strength.data
-            post.dexterity = editForm.dexterity.data
-            post.constitution = editForm.constitution.data
-            post.intelligence = editForm.intelligence.data
-            post.wisdom = editForm.wisdom.data
-            post.charisma = editForm.charisma.data
-
-            db.session.add(post)
+        db.session.query(User, Character).join(User, User.id==Character.userID).all()
+        editForm.name.data = "Bob"
+        editForm.strength.data = "Bob"
+        editForm.dexterity.data = "Bob"
+        editForm.constitution.data = "Bob"
+        editForm.intelligence.data = "Bob"
+        editForm.wisdom.data = "Bob"
+        editForm.charisma.data = "Bob"
+        
+        if editForm.validate():
+            char = characterList.query.get(id)
+            char.name = editForm.name.data
+            char.strength = editForm.name.data
+            char.dexterity = editForm.name.data
+            char.constitution = editForm.constitution.data
+            char.intelligence = editForm.intelligence.data
+            char.wisdom = editForm.wisdom.data
+            char.charisma = editForm.charisma.data
             db.session.commit()
-            return redirect(url_for("viewCharacters"))
+            return redirect(url_for("viewCharacters", editForm = editForm))
         else:
             for field,error in newCharacterForm.errors.items():
                 flash(f"{field}: {error}")

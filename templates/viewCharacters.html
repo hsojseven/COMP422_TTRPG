@@ -131,39 +131,39 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form method="POST">
+            <form method="PUT">
               {# CSRF Protection #}
-              {{ form.hidden_tag() }}
+              {{ editForm.hidden_tag() }}
               <div class="form-floating mb-1">
-                {{form.name(class="form-control", id="floatingInput", placeholder="Char Name", autocomplete="off")}}
-                {{form.name.label(for="floatingInput")}}
+                {{editForm.name(class="form-control", id="floatingInput", placeholder="Char Name", autocomplete="off")}}
+                {{editForm.name.label(for="floatingInput")}}
               </div>
               <div class="form-floating mb-1">
-                {{form.strength(class="form-control", id="floatingInput", placeholder="Strength (between 0 and 20)", autocomplete="off")}} 
-                {{form.strength.label(for="floatingInput")}}
+                {{editForm.strength(class="form-control", id="floatingInput", placeholder="Strength (between 0 and 20)", autocomplete="off")}} 
+                {{editForm.strength.label(for="floatingInput")}}
               </div>
               <div class="form-floating mb-1">
-                {{form.dexterity(class="form-control", id="floatingInput", placeholder="Dexterity (between 0 and 20)", autocomplete="off")}} 
-                {{form.dexterity.label(for="floatingInput")}}
+                {{editForm.dexterity(class="form-control", id="floatingInput", placeholder="Dexterity (between 0 and 20)", autocomplete="off")}} 
+                {{editForm.dexterity.label(for="floatingInput")}}
               </div> 
               <div class="form-floating mb-1">
-                {{form.constitution(class="form-control", id="floatingInput", placeholder="Constitution (between 0 and 20)", autocomplete="off")}} 
-                {{form.constitution.label(for="floatingInput")}}
+                {{editForm.constitution(class="form-control", id="floatingInput", placeholder="Constitution (between 0 and 20)", autocomplete="off")}} 
+                {{editForm.constitution.label(for="floatingInput")}}
               </div>
               <div class="form-floating mb-1">
-                {{form.intelligence(class="form-control", id="floatingInput", placeholder="Intelligence (between 0 and 20)", autocomplete="off")}} 
-                {{form.intelligence.label(for="floatingInput")}}
+                {{editForm.intelligence(class="form-control", id="floatingInput", placeholder="Intelligence (between 0 and 20)", autocomplete="off")}} 
+                {{editForm.intelligence.label(for="floatingInput")}}
               </div>
               <div class="form-floating mb-1">
-                {{form.wisdom(class="form-control", id="floatingInput", placeholder="Wisdom (between 0 and 20)", autocomplete="off")}} 
-                {{form.wisdom.label(for="floatingInput")}}
+                {{editForm.wisdom(class="form-control", id="floatingInput", placeholder="Wisdom (between 0 and 20)", autocomplete="off")}} 
+                {{editForm.wisdom.label(for="floatingInput")}}
               </div>
               <div class="form-floating mb-1">
-                {{form.charisma(class="form-control", id="floatingInput", placeholder="Charisma (between 0 and 20)", autocomplete="off")}} 
-                {{form.charisma.label(for="floatingInput")}}
+                {{editForm.charisma(class="form-control", id="floatingInput", placeholder="Charisma (between 0 and 20)", autocomplete="off")}} 
+                {{editForm.charisma.label(for="floatingInput")}}
               </div>  
               <div class="d-grid gap-2 pt-3">
-                <div class="form">{{form.submit(class="btn btn-outline-success btn-md w-100", tabindex="-1") }}</div>
+                <div class="form">{{editForm  .submit(class="btn btn-outline-success btn-md w-100", tabindex="-1") }}</div>
                 <a href="{{url_for('viewCharacters')}}" class="btn btn-outline-success btn-md" tabindex="-1" role="button">Cancel</a>
               </div>
             </form>
