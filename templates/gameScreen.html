@@ -65,10 +65,10 @@
               <button id="showHideYellow"  class="btn btn-outline-success m-2" > Show/Hide Yellow </button>
               <button id="showHideBlue"  class="btn btn-outline-success m-2" > Show/Hide Blue </button>
               <button id="showHideRed"  class="btn btn-outline-success m-2" > Show/Hide Red </button>
-              <button id="showHideEnemyGreen"  class="btn btn-outline-success m-2" > Show/Hide Enemy Green </button>
-              <button id="showHideEnemyYellow"  class="btn btn-outline-success m-2" > Show/Hide Enemy Yellow </button>
-              <button id="showHideEnemyBlue"  class="btn btn-outline-success m-2" > Show/Hide Enemy Blue </button>
-              <button id="showHideEnemyRed"  class="btn btn-outline-success m-2" > Show/Hide Enemy Red </button>
+              <button id="showHidePink"  class="btn btn-outline-success m-2" > Show/Hide Pink </button>
+              <button id="showHidePurple"  class="btn btn-outline-success m-2" > Show/Hide Purple </button>
+              <button id="showHideBlack"  class="btn btn-outline-success m-2" > Show/Hide Black </button>
+              <button id="showHideBrown"  class="btn btn-outline-success m-2" > Show/Hide Brown </button>
             </div>
           </div>
           <!--CHARACTER CONTAINER  hidden on default-->
@@ -97,18 +97,29 @@
         </div>
 
         <!-- Game Board -->
-        <div id="GameBoard" class="w-75 border"></div>
+        <div id="GameBoard" name={{game.imgUrl}} class="w-75 border"></div>
       </div>
 
 
       <!-- *****************************
         ********************************
         ******************************** -->
-        {% if 1==1 %}
+        {% if role==1 %}
       <script>
 // {"attrs":{"width":958,"height":800},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"width":958,"height":783,"id":"BM"},"className":"Rect"},{"attrs":{"id":"greenBox","x":379,"y":386,"width":50,"height":50,"fill":"green","draggable":true,"stroke":"black"},"className":"Rect"},{"attrs":{"id":"redBox","x":450,"y":375,"width":50,"height":50,"fill":"red","draggable":true,"stroke":"black","visible":false},"className":"Rect"},{"attrs":{"id":"blueBox","x":450,"y":375,"width":50,"height":50,"fill":"blue","stroke":"black","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"yellowBox","x":450,"y":375,"width":50,"height":50,"fill":"yellow","stroke":"black","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"pinkBox","x":450,"y":375,"width":50,"height":50,"fill":"pink","stroke":"black","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"purpleBox","x":450,"y":375,"width":50,"height":50,"fill":"purple","stroke":"black","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"blackBox","x":450,"y":375,"width":50,"height":50,"fill":"black","stroke":"white","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"brownBox","x":450,"y":375,"width":50,"height":50,"fill":"brown","stroke":"black","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"tr"},"className":"Transformer"}]}]}      
     var height = 800;
     var width = 1000;
+
+    var board = document.getElementById('GameBoard');
+    var imgPath = board.getAttribute("name");
+    var splitImg = imgPath.split('.');
+    console.log(splitImg[1]);
+
+    var path = window.location.pathname;
+    console.log("Path: " + path);
+    var splitUrl = path.split('/');
+    var gameID = splitUrl[2];
+    console.log(gameID);
 
     
     var stage = new Konva.Stage({
@@ -121,7 +132,7 @@
       stage.add(layer);
 
       
-      fetch('/api/getboard/1/')
+      fetch('/api/getboard/' + gameID + '/')
         .then(response => response.json())
         .then(data => {
           console.log(data);
@@ -133,7 +144,7 @@
           imageObj.onload = function () {
             stage.findOne('#BM').fillPatternImage(imageObj);
           };
-          imageObj.src = '/static/battle_map2.jpg';
+          imageObj.src = splitImg[1]+'.jpg';
 
           width = imageObj.naturalWidth;
           height = imageObj.naturalHeight;
@@ -141,29 +152,51 @@
           stage.findOne('#BM').moveToBottom();
 
           // Add box to trans
-          stage.findOne('#greenBox').on('click', function() {
-            stage.findOne('#tr').nodes([this])
-          });
+          stage.findOne('#greenBox').on('click', function() { stage.findOne('#tr').nodes([this]) });
+          stage.findOne('#yellowBox').on('click', function() { stage.findOne('#tr').nodes([this]) });
+          stage.findOne('#blueBox').on('click', function() { stage.findOne('#tr').nodes([this]) });
+          stage.findOne('#redBox').on('click', function() { stage.findOne('#tr').nodes([this]) });
+          stage.findOne('#pinkBox').on('click', function() { stage.findOne('#tr').nodes([this]) });
+          stage.findOne('#purpleBox').on('click', function() { stage.findOne('#tr').nodes([this]) });
+          stage.findOne('#blackBox').on('click', function() { stage.findOne('#tr').nodes([this]) });
+          stage.findOne('#brownBox').on('click', function() { stage.findOne('#tr').nodes([this]) });
 
           stage.findOne('#BM').on('click', function() {
             stage.findOne('#tr').nodes([])
           });
 
+          // toggle visibility
           document.getElementById('showHideGreen').addEventListener('click', function () {
-            if(stage.findOne('#greenBox').visible()) {
-              stage.findOne('#greenBox').visible(false);
-            }
-            else {
-              stage.findOne('#greenBox').visible(true);
-            }
+            if(stage.findOne('#greenBox').visible()) { stage.findOne('#greenBox').visible(false); }
+            else { stage.findOne('#greenBox').visible(true); }
           });
           document.getElementById('showHideYellow').addEventListener('click', function () {
-            if(stage.findOne('#yellowBox').visible()) {
-              stage.findOne('#yellowBox').visible(false);
-            }
-            else {
-              stage.findOne('#yellowBox').visible(true);
-            }
+            if(stage.findOne('#yellowBox').visible()) { stage.findOne('#yellowBox').visible(false); }
+            else { stage.findOne('#yellowBox').visible(true); }
+          });
+          document.getElementById('showHideBlue').addEventListener('click', function () {
+            if(stage.findOne('#blueBox').visible()) { stage.findOne('#blueBox').visible(false); }
+            else { stage.findOne('#blueBox').visible(true); }
+          });
+          document.getElementById('showHideRed').addEventListener('click', function () {
+            if(stage.findOne('#redBox').visible()) { stage.findOne('#redBox').visible(false); }
+            else { stage.findOne('#redBox').visible(true); }
+          });
+          document.getElementById('showHidePink').addEventListener('click', function () {
+            if(stage.findOne('#pinkBox').visible()) { stage.findOne('#pinkBox').visible(false); }
+            else { stage.findOne('#pinkBox').visible(true); }
+          });
+          document.getElementById('showHidePurple').addEventListener('click', function () {
+            if(stage.findOne('#purpleBox').visible()) { stage.findOne('#purpleBox').visible(false); }
+            else { stage.findOne('#purpleBox').visible(true); }
+          });
+          document.getElementById('showHideBlack').addEventListener('click', function () {
+            if(stage.findOne('#blackBox').visible()) { stage.findOne('#blackBox').visible(false); }
+            else { stage.findOne('#blackBox').visible(true); }
+          });
+          document.getElementById('showHideBrown').addEventListener('click', function () {
+            if(stage.findOne('#brownBox').visible()) { stage.findOne('#brownBox').visible(false); }
+            else { stage.findOne('#brownBox').visible(true); }
           });
 
           stage.findOne('#greenBox').on('dragmove', function() {
@@ -180,18 +213,169 @@
             if (this.y() < 0) {
               newAbsPos.y = -offsetY;
             }
-            if (this.x() + this.width() > stage.width()) {
-              newAbsPos.x = stage.width() - this.width() - offsetX;
+            if (this.x() + (this.width() * this.scaleX()) > stage.width()) {
+              newAbsPos.x = stage.width() - (this.width() * this.scaleX()) - offsetX;
             }
-            if (this.y() + this.height() > stage.height()) {
-              newAbsPos.y = stage.height() - this.height() - offsetY;
+            if (this.y() + (this.height() * this.scaleY()) > stage.height()) {
+              newAbsPos.y = stage.height() - (this.height() * this.scaleY()) - offsetY;
+            }
+            this.setAbsolutePosition(newAbsPos);
+        });
+        stage.findOne('#yellowBox').on('dragmove', function() {
+            const absPos = this.getAbsolutePosition();
+            // where are shapes inside bounding box of all shapes?
+            const offsetX = this.x() - absPos.x;
+            const offsetY = this.y() - absPos.y;
+
+            // we total box goes outside of viewport, we need to move absolute position of shape
+            const newAbsPos = { ...absPos };
+            if (this.x() < 0) {
+              newAbsPos.x = -offsetX;
+            }
+            if (this.y() < 0) {
+              newAbsPos.y = -offsetY;
+            }
+            if (this.x() + (this.width() * this.scaleX()) > stage.width()) {
+              newAbsPos.x = stage.width() - (this.width() * this.scaleX()) - offsetX;
+            }
+            if (this.y() + (this.height() * this.scaleY()) > stage.height()) {
+              newAbsPos.y = stage.height() - (this.height() * this.scaleY()) - offsetY;
+            }
+            this.setAbsolutePosition(newAbsPos);
+        });
+        stage.findOne('#blueBox').on('dragmove', function() {
+            const absPos = this.getAbsolutePosition();
+            // where are shapes inside bounding box of all shapes?
+            const offsetX = this.x() - absPos.x;
+            const offsetY = this.y() - absPos.y;
+
+            // we total box goes outside of viewport, we need to move absolute position of shape
+            const newAbsPos = { ...absPos };
+            if (this.x() < 0) {
+              newAbsPos.x = -offsetX;
+            }
+            if (this.y() < 0) {
+              newAbsPos.y = -offsetY;
+            }
+            if (this.x() + (this.width() * this.scaleX()) > stage.width()) {
+              newAbsPos.x = stage.width() - (this.width() * this.scaleX()) - offsetX;
+            }
+            if (this.y() + (this.height() * this.scaleY()) > stage.height()) {
+              newAbsPos.y = stage.height() - (this.height() * this.scaleY()) - offsetY;
+            }
+            this.setAbsolutePosition(newAbsPos);
+        });
+        stage.findOne('#redBox').on('dragmove', function() {
+            const absPos = this.getAbsolutePosition();
+            // where are shapes inside bounding box of all shapes?
+            const offsetX = this.x() - absPos.x;
+            const offsetY = this.y() - absPos.y;
+
+            // we total box goes outside of viewport, we need to move absolute position of shape
+            const newAbsPos = { ...absPos };
+            if (this.x() < 0) {
+              newAbsPos.x = -offsetX;
+            }
+            if (this.y() < 0) {
+              newAbsPos.y = -offsetY;
+            }
+            if (this.x() + (this.width() * this.scaleX()) > stage.width()) {
+              newAbsPos.x = stage.width() - (this.width() * this.scaleX()) - offsetX;
+            }
+            if (this.y() + (this.height() * this.scaleY()) > stage.height()) {
+              newAbsPos.y = stage.height() - (this.height() * this.scaleY()) - offsetY;
+            }
+            this.setAbsolutePosition(newAbsPos);
+        });
+        stage.findOne('#pinkBox').on('dragmove', function() {
+            const absPos = this.getAbsolutePosition();
+            // where are shapes inside bounding box of all shapes?
+            const offsetX = this.x() - absPos.x;
+            const offsetY = this.y() - absPos.y;
+
+            // we total box goes outside of viewport, we need to move absolute position of shape
+            const newAbsPos = { ...absPos };
+            if (this.x() < 0) {
+              newAbsPos.x = -offsetX;
+            }
+            if (this.y() < 0) {
+              newAbsPos.y = -offsetY;
+            }
+            if (this.x() + (this.width() * this.scaleX()) > stage.width()) {
+              newAbsPos.x = stage.width() - (this.width() * this.scaleX()) - offsetX;
+            }
+            if (this.y() + (this.height() * this.scaleY()) > stage.height()) {
+              newAbsPos.y = stage.height() - (this.height() * this.scaleY()) - offsetY;
+            }
+            this.setAbsolutePosition(newAbsPos);
+        });
+        stage.findOne('#purpleBox').on('dragmove', function() {
+            const absPos = this.getAbsolutePosition();
+            // where are shapes inside bounding box of all shapes?
+            const offsetX = this.x() - absPos.x;
+            const offsetY = this.y() - absPos.y;
+
+            // we total box goes outside of viewport, we need to move absolute position of shape
+            const newAbsPos = { ...absPos };
+            if (this.x() < 0) {
+              newAbsPos.x = -offsetX;
+            }
+            if (this.y() < 0) {
+              newAbsPos.y = -offsetY;
+            }
+            if (this.x() + (this.width() * this.scaleX()) > stage.width()) {
+              newAbsPos.x = stage.width() - (this.width() * this.scaleX()) - offsetX;
+            }
+            if (this.y() + (this.height() * this.scaleY()) > stage.height()) {
+              newAbsPos.y = stage.height() - (this.height() * this.scaleY()) - offsetY;
+            }
+            this.setAbsolutePosition(newAbsPos);
+        });
+        stage.findOne('#blackBox').on('dragmove', function() {
+            const absPos = this.getAbsolutePosition();
+            // where are shapes inside bounding box of all shapes?
+            const offsetX = this.x() - absPos.x;
+            const offsetY = this.y() - absPos.y;
+
+            // we total box goes outside of viewport, we need to move absolute position of shape
+            const newAbsPos = { ...absPos };
+            if (this.x() < 0) {
+              newAbsPos.x = -offsetX;
+            }
+            if (this.y() < 0) {
+              newAbsPos.y = -offsetY;
+            }
+            if (this.x() + (this.width() * this.scaleX()) > stage.width()) {
+              newAbsPos.x = stage.width() - (this.width() * this.scaleX()) - offsetX;
+            }
+            if (this.y() + (this.height() * this.scaleY()) > stage.height()) {
+              newAbsPos.y = stage.height() - (this.height() * this.scaleY()) - offsetY;
+            }
+            this.setAbsolutePosition(newAbsPos);
+        });
+        stage.findOne('#brownBox').on('dragmove', function() {
+            const absPos = this.getAbsolutePosition();
+            // where are shapes inside bounding box of all shapes?
+            const offsetX = this.x() - absPos.x;
+            const offsetY = this.y() - absPos.y;
+
+            // we total box goes outside of viewport, we need to move absolute position of shape
+            const newAbsPos = { ...absPos };
+            if (this.x() < 0) {
+              newAbsPos.x = -offsetX;
+            }
+            if (this.y() < 0) {
+              newAbsPos.y = -offsetY;
+            }
+            if (this.x() + (this.width() * this.scaleX()) > stage.width()) {
+              newAbsPos.x = stage.width() - (this.width() * this.scaleX()) - offsetX;
+            }
+            if (this.y() + (this.height() * this.scaleY()) > stage.height()) {
+              newAbsPos.y = stage.height() - (this.height() * this.scaleY()) - offsetY;
             }
             this.setAbsolutePosition(newAbsPos);
         });
       });
-      
-      
-        
       
       /*
       var stage = new Konva.Stage({
@@ -380,19 +564,28 @@
         myObj.attrs.height = height;
         myObj.attrs.width = width;
 
-        postData('/api/addboard/1/', JSON.stringify(myObj))
+        postData('/api/addboard/' + gameID + '/', JSON.stringify(myObj))
           .then(data => {
             console.log("Posted to the server"); // JSON data parsed by `data.json()` call
           });
       }, 1000);
-
-
     </script>
 
     {% else %}
     <script>
       var height = 800;
       var width = 1000;
+
+      var board = document.getElementById('GameBoard');
+      var imgPath = board.getAttribute("name");
+      var splitImg = imgPath.split('.');
+      console.log(splitImg[1]);
+
+      var path = window.location.pathname;
+      console.log("Path: " + path);
+      var splitUrl = path.split('/');
+      var gameID = splitUrl[2];
+      console.log(gameID);
 
     
       var stage = new Konva.Stage({
@@ -404,8 +597,9 @@
       var layer = new Konva.Layer();
       stage.add(layer);
 
-      const interval = setInterval(function() {
-      fetch('/api/getboard/1/')
+      document.getElementById('showHideGreen').remove();
+
+      fetch('/api/getboard/'+gameID+'/')
         .then(response => response.json())
         .then(data => {
           console.log(data);
@@ -417,9 +611,34 @@
           imageObj.onload = function () {
             stage.findOne('#BM').fillPatternImage(imageObj);
           };
-          imageObj.src = '/static/battle_map.jpg';
+          imageObj.src = splitImg[1]+'.jpg';
         });
-      }, 5000);
+
+      const interval = setInterval(function() {
+      fetch('/api/getboard/'+gameID+'/')
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          // TODO: This is where to fix the required reload (edit data json)
+          layer.destroyChildren();
+          stage = Konva.Node.create(data, 'GameBoard');
+
+          var imageObj = new Image();
+          imageObj.onload = function () {
+            stage.findOne('#BM').fillPatternImage(imageObj);
+          };
+          imageObj.src = splitImg[1]+'.jpg';
+        });
+
+          stage.findOne('#greenBox').draggable(false);
+          stage.findOne('#yellowBox').draggable(false);
+          stage.findOne('#blueBox').draggable(false);
+          stage.findOne('#redBox').draggable(false);
+          stage.findOne('#pinkBox').draggable(false);
+          stage.findOne('#purpleBox').draggable(false);
+          stage.findOne('#blackBox').draggable(false);
+          stage.findOne('#brownBox').draggable(false);
+      }, 3000);
     </script>
     {% endif %}
         

@@ -1,12 +1,16 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from sqlalchemy.orm import session
+from flask import Flask, render_template, request, redirect, url_for, flash
+from sqlalchemy.util.langhelpers import NoneType
 from myforms import GameForm, LoginForm, RegisterForm, CharacterForm, JoinWithIDForm, JoinGameForm
 from flask_login import UserMixin, LoginManager, login_required, login_user, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from hashing import Hasher
 from werkzeug.utils import secure_filename
 import json
+import random
+import string
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(32)
@@ -58,14 +62,17 @@ class User(UserMixin, db.Model):
 #-----------------------------------------------------------------------------------------
 #------------------------------------- GAME TABLE ----------------------------------------
 #-----------------------------------------------------------------------------------------
+DEFAULT_BOARD = '{"attrs":{"width":958,"height":800},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"width":958,"height":783,"id":"BM"},"className":"Rect"},{"attrs":{"id":"greenBox","x":379,"y":386,"width":50,"height":50,"fill":"green","draggable":true,"stroke":"black"},"className":"Rect"},{"attrs":{"id":"redBox","x":450,"y":375,"width":50,"height":50,"fill":"red","draggable":true,"stroke":"black","visible":false},"className":"Rect"},{"attrs":{"id":"blueBox","x":450,"y":375,"width":50,"height":50,"fill":"blue","stroke":"black","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"yellowBox","x":450,"y":375,"width":50,"height":50,"fill":"yellow","stroke":"black","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"pinkBox","x":450,"y":375,"width":50,"height":50,"fill":"pink","stroke":"black","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"purpleBox","x":450,"y":375,"width":50,"height":50,"fill":"purple","stroke":"black","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"blackBox","x":450,"y":375,"width":50,"height":50,"fill":"black","stroke":"white","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"brownBox","x":450,"y":375,"width":50,"height":50,"fill":"brown","stroke":"black","draggable":true,"visible":false},"className":"Rect"},{"attrs":{"id":"tr"},"className":"Transformer"}]}]}'
 class Game(db.Model):
     __tablename__ = 'Games'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode, nullable=False)
     description = db.Column(db.Unicode, nullable=False)
     board = db.Column(db.Unicode, nullable=True)
+    imgUrl = db.Column(db.Unicode, nullable=True)
     gamers = db.relationship('Player', backref='Gamers')
     #msgHistory = db.Column(db.Unicode, nullable=True)
+    
 #-----------------------------------------------------------------------------------------
 #----------------------------------- CHARACTER TABLE -------------------------------------
 #-----------------------------------------------------------------------------------------
@@ -178,17 +185,16 @@ def home():
     
     if request.method == "POST":
         if newGameForm.submit.data and newGameForm.validate():
-
-            #filename = secure_filename(newGameForm.map.data.filename)
-            #newGameForm.map.data.save('uploads/' + filename)
-            # save file from input
+            letters = string.ascii_letters
+            imgName = ''.join(random.choice(letters) for i in range(20))
+            
             image_data = request.files[newGameForm.map.name].read()
-            path = f"./static/{newGameForm.map.name}"
-            file = open(path, "w")
+            path = f"./static/{imgName}.jpg"
+            file = open(path, "wb")
             file.write(image_data)
             file.close()
 
-            game = Game(name=newGameForm.name.data, description=newGameForm.description.data, board=path)
+            game = Game(name=newGameForm.name.data, description=newGameForm.description.data, board=DEFAULT_BOARD, imgUrl = path)
             db.session.add(game)
             db.session.commit()
             db.session.flush()
@@ -205,7 +211,10 @@ def home():
             return redirect(url_for("game", gameID=gameID, characterID=characterID))
             
         elif joinWithIDForm.submitJoin.data and joinWithIDForm.validate():
-            player = Player(userID=current_user.id, game=joinWithIDForm.game.data, role=0)
+            player = Player(userID=current_user.id, gameID=joinWithIDForm.game.data, role=0)
+            db.session.add(player)
+            db.session.commit()
+            db.session.flush()
             return redirect(url_for("home"))
         else:
             for field,error in newGameForm.errors.items():
@@ -264,8 +273,13 @@ def viewCharacters():
 def game(gameID, characterID):
     game = db.session.query(Game).filter(Game.id == gameID).first()
     character = db.session.query(Character).filter(Character.id == characterID).first()
+    rolePlayer = db.session.query(Player).filter(Player.gameID == game.id).filter(Player.userID == current_user.id).first()
     
-    return render_template("gameScreen.html", game=game, user=current_user.username, char=character)
+    ## TODO: REMOVE
+    if(isinstance(rolePlayer, NoneType)):
+        return render_template("gameScreen.html", game=game, user=current_user.username, char=character, role=0)
+    
+    return render_template("gameScreen.html", game=game, user=current_user.username, char=character, role=rolePlayer.role)
 #-----------------------------------------------------------------------------------------
 #-------------------------------------- LOG OUT ------------------------------------------
 #-----------------------------------------------------------------------------------------
@@ -291,7 +305,7 @@ def remove_game(gameID):
     db.session.commit()
     return redirect(url_for('home'))
 #-----------------------------------------------------------------------------------------
-#--------------------------------- REMOVE CHARACTER --------------------------------------
+#-------------------------------------- REMOVE CHARACTER ---------------------------------
 #-----------------------------------------------------------------------------------------
 @app.get('/viewCharacters/<characterID>')
 @login_required
@@ -300,8 +314,9 @@ def remove_character(characterID):
     db.session.delete(char_to_rmv)
     db.session.commit()
     return redirect(url_for('viewCharacters'))
+
 #-----------------------------------------------------------------------------------------
-#------------------------------------- CUSTOM API  ---------------------------------------
+#-------------------------------------- API ----------------------------------------------
 #-----------------------------------------------------------------------------------------
 @app.route("/api/getboard/<gameID>/")
 def get_board(gameID):

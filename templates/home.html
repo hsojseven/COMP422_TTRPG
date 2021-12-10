@@ -75,11 +75,11 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
               {{ form.hidden_tag() }}
               <p> {{form.name(class="form-control", placeholder="Game Name", autocomplete="off") }} </p>
               <p> {{form.description(class="form-control", placeholder="Game Description") }} </p>
-              <p> {{form.map(enctype="multipart/form-data") }} </p>
+              <p> {{form.map() }} </p>
               <p class="pt-3"> {{form.submit(class="btn btn-outline-success btn-md w-100") }} </p>
               <p> <a style="" class="btn btn-outline-success btn-md w-100" type="submit" href="{{url_for('home')}}"> Cancel </a>  </p>
               </form>
